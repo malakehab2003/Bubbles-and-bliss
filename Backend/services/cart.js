@@ -1,21 +1,6 @@
 import { Cart } from "../models/db.js";
 
 
-export const checkColorService = (product, color) => {
-    if (!product || !color) {
-        throw new Error("Missing product_id or color");
-    }
-
-    const colors = product.colors;
-
-    if (!colors) throw new Error('Not avaliable color');
-    
-    const exists = colors.includes(color);
-    
-    if (!exists) throw new Error("This product don't have this color");
-}
-
-
 export const checkSizeService = (product, size) => {
     if (!product || !size) {
         throw new Error("Missing product_id or size");

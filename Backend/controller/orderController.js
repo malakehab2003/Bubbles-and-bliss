@@ -3,15 +3,12 @@ import { Order } from "../models/db.js";
 import { validateAddressToUser } from "../services/addressService.js";
 import * as service from '../services/orderService.js';
 import { getAnotherUserService } from "../services/userService.js";
-import { sendNotificationsService } from "../services/notificationService.js";
 
 export const createOrder = async (req, res) => {
     try {
         const user = req.user;
         const { ...data } = req.body;
-        if (!data.total_price || !data.receive_type || !data.payment_type) return res.status(400).send({ err: "Missing requried fields" });
-        if (data.receive_type === 'delivery' && !data.address_id) return res.status(400).send({ err: "Address is requried" });
-        if (data.receive_type === 'pickup' && data.address_id) delete data.address_id;
+        if (!data.total_price) return res.status(400).send({ err: "Missing requried fields" });
         if (data.address_id) await validateAddressToUser(user.id, data.address_id);
         if (data.promo_code_id) await removePromocodeFromUser(data.promo_code_id, user);
         data.user_id = user.id;
@@ -89,7 +86,7 @@ export const getOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const { total_price, order_status, receive_type, payment_type, address_id, promo_code_id } = req.body;
+        const { total_price, order_status, address_id, promo_code_id } = req.body;
 
         const orders = await service.getOrders({ id, });
         const currentOrder = orders[0];
@@ -97,8 +94,6 @@ export const updateOrder = async (req, res) => {
 
         if (total_price) currentOrder.total_price = total_price;
         if (order_status) currentOrder.order_status = order_status;
-        if (receive_type) currentOrder.receive_type = receive_type;
-        if (payment_type) currentOrder.payment_type = payment_type;
         if (promo_code_id) {
             await removePromocodeFromUser(promo_code_id, user);
             currentOrder.promo_code_id = promo_code_id;
@@ -109,12 +104,6 @@ export const updateOrder = async (req, res) => {
         }
 
         await currentOrder.save();
-
-        const description = "Your order has updated go and check it";
-        const message = "Order update";
-        const entity = 'order';
-        const entity_id = currentOrder.id;
-        await sendNotificationsService([user.id], description, message, entity, entity_id);
 
         return res.status(200).send({
             message: "Order updated successfully",

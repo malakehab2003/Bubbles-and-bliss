@@ -17,11 +17,6 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Government.hasMany(models.Address, { foreignKey: 'government_id', as: 'address' });
-
-      Government.hasMany(models.Item, {
-        foreignKey: 'government_id',
-        as: 'items'
-      });
     }
   }
   Government.init({

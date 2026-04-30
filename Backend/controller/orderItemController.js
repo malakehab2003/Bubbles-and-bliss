@@ -39,7 +39,6 @@ export const createItems = async (req, res) => {
         const orderItemsData = cartItems.map(item => ({
             order_id: order[0].id,
             quantity: item.quantity,
-            color: item.color,
             size: item.size,
             product_id: item.product_id,
         }));

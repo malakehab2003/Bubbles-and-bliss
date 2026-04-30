@@ -8,7 +8,6 @@ module.exports = {
       [
         {
           quantity: 2,
-          color: 'Black',
           size: 'M',
           user_id: 1,
           product_id: 1,
@@ -17,7 +16,6 @@ module.exports = {
         },
         {
           quantity: 1,
-          color: 'White',
           size: 'L',
           user_id: 1,
           product_id: 2,
@@ -26,7 +24,6 @@ module.exports = {
         },
         {
           quantity: 3,
-          color: 'Red',
           size: 'S',
           user_id: 2,
           product_id: 1,
@@ -35,7 +32,6 @@ module.exports = {
         },
         {
           quantity: 1,
-          color: 'Blue',
           size: 'XL',
           user_id: 2,
           product_id: 3,
@@ -44,7 +40,6 @@ module.exports = {
         },
         {
           quantity: 4,
-          color: null,
           size: null,
           user_id: 3,
           product_id: 4,
@@ -53,7 +48,6 @@ module.exports = {
         },
         {
           quantity: 2,
-          color: 'Green',
           size: 'M',
           user_id: 3,
           product_id: 2,
@@ -62,7 +56,6 @@ module.exports = {
         },
         {
           quantity: 1,
-          color: 'Black',
           size: 'S',
           user_id: 4,
           product_id: 5,
@@ -71,7 +64,6 @@ module.exports = {
         },
         {
           quantity: 5,
-          color: 'Brown',
           size: 'L',
           user_id: 4,
           product_id: 1,
@@ -80,7 +72,6 @@ module.exports = {
         },
         {
           quantity: 2,
-          color: 'Gray',
           size: 'M',
           user_id: 5,
           product_id: 3,
@@ -89,7 +80,6 @@ module.exports = {
         },
         {
           quantity: 1,
-          color: null,
           size: null,
           user_id: 5,
           product_id: 4,
@@ -98,7 +88,6 @@ module.exports = {
         },
         {
   quantity: 2,
-  color: 'Black',
   size: 'M',
   user_id: 6,
   product_id: 6,
@@ -107,7 +96,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'White',
   size: 'L',
   user_id: 6,
   product_id: 7,
@@ -116,7 +104,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Red',
   size: 'S',
   user_id: 6,
   product_id: 8,
@@ -125,7 +112,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Blue',
   size: 'M',
   user_id: 7,
   product_id: 6,
@@ -134,7 +120,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Green',
   size: 'L',
   user_id: 7,
   product_id: 7,
@@ -143,7 +128,6 @@ module.exports = {
 },
 {
   quantity: 4,
-  color: 'Black',
   size: 'XL',
   user_id: 7,
   product_id: 8,
@@ -152,7 +136,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Brown',
   size: 'M',
   user_id: 8,
   product_id: 6,
@@ -161,7 +144,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Gray',
   size: 'L',
   user_id: 8,
   product_id: 7,
@@ -170,7 +152,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Red',
   size: 'S',
   user_id: 8,
   product_id: 8,
@@ -179,7 +160,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Blue',
   size: 'M',
   user_id: 9,
   product_id: 6,
@@ -188,7 +168,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Green',
   size: 'L',
   user_id: 9,
   product_id: 7,
@@ -197,7 +176,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Black',
   size: 'XL',
   user_id: 9,
   product_id: 8,
@@ -206,7 +184,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Brown',
   size: 'M',
   user_id: 10,
   product_id: 6,
@@ -215,7 +192,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Gray',
   size: 'L',
   user_id: 10,
   product_id: 7,
@@ -224,7 +200,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Red',
   size: 'S',
   user_id: 10,
   product_id: 8,
@@ -233,7 +208,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'White',
   size: 'M',
   user_id: 6,
   product_id: 9,
@@ -242,7 +216,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Black',
   size: 'L',
   user_id: 6,
   product_id: 10,
@@ -251,7 +224,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Blue',
   size: 'S',
   user_id: 7,
   product_id: 9,
@@ -260,7 +232,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Green',
   size: 'M',
   user_id: 7,
   product_id: 2,
@@ -269,7 +240,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Red',
   size: 'L',
   user_id: 8,
   product_id: 9,
@@ -278,7 +248,6 @@ module.exports = {
 },
 {
   quantity: 4,
-  color: 'Black',
   size: 'XL',
   user_id: 8,
   product_id: 10,
@@ -287,7 +256,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Brown',
   size: 'M',
   user_id: 9,
   product_id: 9,
@@ -296,7 +264,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Gray',
   size: 'L',
   user_id: 9,
   product_id: 10,
@@ -305,7 +272,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Red',
   size: 'S',
   user_id: 10,
   product_id: 9,
@@ -314,7 +280,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Blue',
   size: 'M',
   user_id: 10,
   product_id: 10,
@@ -323,7 +288,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Green',
   size: 'L',
   user_id: 6,
   product_id: 1,
@@ -332,7 +296,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Black',
   size: 'XL',
   user_id: 6,
   product_id: 2,
@@ -341,7 +304,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Brown',
   size: 'M',
   user_id: 7,
   product_id: 1,
@@ -350,7 +312,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Gray',
   size: 'L',
   user_id: 7,
   product_id: 2,
@@ -359,7 +320,6 @@ module.exports = {
 },
 {
   quantity: 3,
-  color: 'Red',
   size: 'S',
   user_id: 8,
   product_id: 1,
@@ -368,7 +328,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Blue',
   size: 'M',
   user_id: 8,
   product_id: 2,
@@ -377,7 +336,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Green',
   size: 'L',
   user_id: 9,
   product_id: 1,
@@ -386,7 +344,6 @@ module.exports = {
 },
 {
   quantity: 4,
-  color: 'Black',
   size: 'XL',
   user_id: 9,
   product_id: 2,
@@ -395,7 +352,6 @@ module.exports = {
 },
 {
   quantity: 2,
-  color: 'Brown',
   size: 'M',
   user_id: 10,
   product_id: 1,
@@ -404,7 +360,6 @@ module.exports = {
 },
 {
   quantity: 1,
-  color: 'Gray',
   size: 'L',
   user_id: 10,
   product_id: 2,

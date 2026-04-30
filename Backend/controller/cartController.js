@@ -72,7 +72,6 @@ export const addProduct = async (req, res) => {
     try {
         const user = req.user;
         const {
-            color,
             size,
             ...data
         } = req.body;
@@ -86,11 +85,7 @@ export const addProduct = async (req, res) => {
         const product = await getProductService(data.product_id);
 
         if (!product) return res.status(400).send({ err: "Can't get product", });
-
-        if (color) {
-            service.checkColorService(product, color);
-            data.color = color;
-        }
+        
         if (size) {
             service.checkSizeService(product, size);
             data.size = size

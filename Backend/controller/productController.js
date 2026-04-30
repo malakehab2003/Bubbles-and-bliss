@@ -48,7 +48,7 @@ export const getProudct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { images_url, sale, category_id, rate, ...rest } = req.body;
+        const { images_url, sale, rate, ...rest } = req.body;
         const user = req.user;
 
         if (
@@ -56,14 +56,11 @@ export const createProduct = async (req, res) => {
             !rest.price ||
             !rest.stock ||
             !rest.description ||
-            !category_id ||
-            !rest.brand_id ||
             !images_url
         ) return res.status(400).send({ err: "Missing requried fields", });
 
         if (!sale) sale = 0;
         rest.sale = sale;
-        rest.product_category_id = category_id;
         const product = await service.createProductService(rest);
 
         if (!product) return res.status(400).send({ err: "Can't create product", });
@@ -97,14 +94,13 @@ export const deleteProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     try {
-        const { category_id, rate, ...rest } = req.body;
+        const { rate, ...rest } = req.body;
         const { id } = req.params;
         
         validate.validateId(id);
 
         const data = {
             ...rest,
-            product_category_id: category_id,
             id,
         };
 

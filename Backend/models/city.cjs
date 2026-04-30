@@ -16,11 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         as: 'government'
       });
 
-      City.hasMany(models.Item, {
-        foreignKey: 'city_id',
-        as: 'items'
-      });
-
       City.hasMany(models.Address, { foreignKey: 'city_id', as: 'address' });
     }
   }

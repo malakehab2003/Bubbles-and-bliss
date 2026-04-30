@@ -1,4 +1,4 @@
-import { ItemCategory, Government, City } from "../models/db.js";
+import { Government, City } from "../models/db.js";
 
 
 export const validateName = (name) => {
@@ -105,7 +105,7 @@ export const validateImageUrl = (image_url) => {
         throw new Error('Invalid image URL');
     }
 
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
 
     const isValid = allowedExtensions.some(ext =>
         image_url.toLowerCase().endsWith(ext)
@@ -142,14 +142,6 @@ export const validateUserData = (userData) => {
 /////////////////////////////////////////////
 
 
-export const validateType = (type) => {
-    const validTypes = ['lost', 'found'];
-
-    if (!type || !validTypes.includes(type.toLowerCase())) {
-        throw new Error("No type found");
-    }
-}
-
 
 export const validateId = (id) => {
     if (!id) {
@@ -165,14 +157,6 @@ export const validateId = (id) => {
     return parsedId;
 }
 
-
-export const validateCategoryId = async (id) => {
-    validateId(id);
-    const category = await ItemCategory.findByPk(id);
-    if (!category) {
-        throw new Error('Category not found');
-    }
-}
 
 
 export const validateGovernmentId = async (id) => {
@@ -213,14 +197,3 @@ export const validateDate = (date) => {
 
     return parsedDate;
 };
-
-
-export const validateItemData = async (government_id, category_id, city_id, type, date) => {
-    if (category_id) await validateCategoryId(category_id);
-    if (government_id) {
-        await validateGovernmentId(government_id);
-        await validateCityId(city_id, government_id);
-    }
-    if (type) validateType(type);
-    if (date) validateDate(date)
-}

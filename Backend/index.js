@@ -4,7 +4,6 @@ import logger from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { initSocket } from "./utils/socket.js";
 import http from "http";
 
 dotenv.config();
@@ -13,7 +12,6 @@ const port = process.env.PORT || 5000;
 
 const app = express();
 const server = http.createServer(app);
-initSocket(server);
 
 app.use(logger("dev"));
 app.use(cors());

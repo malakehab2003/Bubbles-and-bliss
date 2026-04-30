@@ -16,11 +16,6 @@ module.exports = {
         defaultValue: 1,
       },
 
-      color: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-
       size: {
         type: Sequelize.STRING,
         allowNull: true,

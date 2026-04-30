@@ -32,10 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
 
-      color: {
-        type: DataTypes.STRING,
-      },
-
       size: {
         type: DataTypes.STRING,
       },

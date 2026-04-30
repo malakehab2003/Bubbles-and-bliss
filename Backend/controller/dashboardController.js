@@ -1,5 +1,5 @@
-import { Order, OrderItem, Product, ProductCategory } from "../models/db.js";
-import { Sequelize, where } from "sequelize";
+import { Order, OrderItem, Product } from "../models/db.js";
+import { Sequelize } from "sequelize";
 import { Op } from "sequelize";
 
 
@@ -47,35 +47,11 @@ export const getDashboard = async (req, res) => {
       limit: 5
     });
 
-    // Sales by Category
-    const salesByCategory = await OrderItem.findAll({
-      attributes: [
-        [Sequelize.col("Product.category.name"), "category"],
-        [Sequelize.fn("SUM", Sequelize.col("OrderItem.quantity")), "totalSales"]
-      ],
-      include: [
-        {
-          model: Product,
-          as: "product",
-          attributes: [],
-          include: [
-            {
-              model: ProductCategory,
-              as: "category",
-              attributes: []
-            }
-          ]
-        }
-      ],
-      group: ["Product.category.id"]
-    });
-
     return res.status(200).send({
       totalRevenue,
       totalOrders,
       topSellingProducts,
       leastSellingProducts,
-      salesByCategory
     });
     } catch (err) {
         return res.status(400).send({ err: err.message, });

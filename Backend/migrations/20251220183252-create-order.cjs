@@ -25,11 +25,6 @@ module.exports = {
         allowNull: false,
         defaultValue: 'processing',
       },
-      
-      payment_type: {
-        type: Sequelize.ENUM('cash', 'card'),
-        allowNull: false,
-      },
 
       user_id: {
         type: Sequelize.INTEGER,
@@ -49,6 +44,11 @@ module.exports = {
           key: 'id',
         },
         onDelete: 'CASCADE',
+      },
+
+      phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
 
       promocode_id: {

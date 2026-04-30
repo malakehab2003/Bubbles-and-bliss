@@ -29,10 +29,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 1,
       },
 
-      color: {
-        type: DataTypes.STRING,
-      },
-
       size: {
         type: DataTypes.STRING,
       },

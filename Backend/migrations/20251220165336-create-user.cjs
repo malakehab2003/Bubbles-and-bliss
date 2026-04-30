@@ -30,12 +30,6 @@ module.exports = {
         allowNull: true,
       },
 
-      show_phone_number: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
-
       email: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -45,11 +39,6 @@ module.exports = {
       gender: {
         type: Sequelize.ENUM('male', 'female'),
         allowNull: false,
-      },
-
-      last_login: {
-        type: Sequelize.DATE,
-        allowNull: true,
       },
 
       password: {

@@ -30,11 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
 
-    landmark: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-
     address: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -53,10 +48,6 @@ module.exports = (sequelize, DataTypes) => {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-
-    postal_code: {
-      type: DataTypes.STRING,
     },
   },
 

@@ -15,11 +15,6 @@ module.exports = {
         allowNull: false,
       },
 
-      landmark: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-
       address: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -43,11 +38,6 @@ module.exports = {
           key: 'id',
         },
         onDelete: 'CASCADE',
-      },
-
-      postal_code: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
 
       user_id: {

@@ -32,11 +32,6 @@ module.exports = {
         allowNull: false,
       },
 
-      colors: {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
-
       sizes: {
         type: Sequelize.JSON,
         allowNull: true,
@@ -57,28 +52,6 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
         allowNull: true,
-      },
-
-      product_category_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'ProductCategories',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-
-      brand_id: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'Brands',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
       },
 
       created_at: {
