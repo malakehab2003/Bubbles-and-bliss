@@ -2,21 +2,24 @@ import { removePromocodeFromUser } from "../services/promocodeService.js";
 import { Order } from "../models/db.js";
 import * as service from '../services/orderService.js';
 import { getAnotherUserService } from "../services/userService.js";
+import { validatePhone, validateCityId } from "../utils/validateData.js";
 
 export const createOrder = async (req, res) => {
     try {
         const user = req.user;
         const { ...data } = req.body;
-        if (!data.total_price) return res.status(400).send({ err: "Missing requried fields" });
-        if (data.promo_code_id) await removePromocodeFromUser(data.promo_code_id, user);
+        if (!data.total_price || !data.address || !data.phone || !data.government_id || !data.city_id) return res.status(400).send({ err: "Missing requried fields" });
         data.user_id = user.id;
+        validatePhone(data.phone);
+        await validateCityId(data.city_id, data.government_id);
         data.order_status = 'processing';
-
+        
         const order = await Order.create({
             ...data
         });
-
+        
         if (!order) return res.status(400).send({ err: "Can't create order" });
+        if (data.promocode_id) await removePromocodeFromUser(data.promocode_id, user);
 
         return res.status(201).send({
             message: "Order created successfully",
@@ -84,7 +87,7 @@ export const getOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const { total_price, order_status, promo_code_id } = req.body;
+        const { total_price, order_status, promocode_id } = req.body;
 
         const orders = await service.getOrders({ id, });
         const currentOrder = orders[0];
@@ -92,9 +95,9 @@ export const updateOrder = async (req, res) => {
 
         if (total_price) currentOrder.total_price = total_price;
         if (order_status) currentOrder.order_status = order_status;
-        if (promo_code_id) {
-            await removePromocodeFromUser(promo_code_id, user);
-            currentOrder.promo_code_id = promo_code_id;
+        if (promocode_id) {
+            await removePromocodeFromUser(promocode_id, user);
+            currentOrder.promocode_id = promocode_id;
         }
 
         await currentOrder.save();

@@ -1,4 +1,4 @@
-import { Order, User, PromoCode } from "../models/db.js";
+import { Order, User, PromoCode, Government, City } from "../models/db.js";
 
 
 
@@ -16,6 +16,16 @@ export const getOrders = async (where) => {
             {
                 model: PromoCode,
                 as: 'promocode',
+            },
+            {
+                model: Government,
+                as: 'government',
+                attributes: ['id', 'name']
+            },
+            {
+                model: City,
+                as: 'city',
+                attributes: ['id', 'name']
             },
         ]
     });
