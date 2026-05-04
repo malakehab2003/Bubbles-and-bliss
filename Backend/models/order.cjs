@@ -12,9 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Order.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
-      Order.belongsTo(models.Address, { foreignKey: 'address_id', as: 'address' });
       Order.belongsTo(models.PromoCode, { foreignKey: 'promocode_id', as: 'promocode' });
       Order.hasMany(models.OrderItem, { foreignKey: 'order_id', as: 'orderitem' });
+      Order.belongsTo(models.Government, { foreignKey: "government_id", as: "government" });
+      Order.belongsTo(models.City, { foreignKey: "city_id", as: "city" });
     }
   }
   Order.init(
@@ -27,6 +28,21 @@ module.exports = (sequelize, DataTypes) => {
 
       total_price: {
         type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+      },
+
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      landmark: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+
+      phone: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
 

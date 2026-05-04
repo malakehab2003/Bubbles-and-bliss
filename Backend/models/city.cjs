@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'government'
       });
 
-      City.hasMany(models.Address, { foreignKey: 'city_id', as: 'address' });
+      City.hasOne(models.Order, { foreignKey: "city_id", as: "order" });
     }
   }
   City.init({

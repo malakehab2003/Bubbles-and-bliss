@@ -1,6 +1,5 @@
 import { removePromocodeFromUser } from "../services/promocodeService.js";
 import { Order } from "../models/db.js";
-import { validateAddressToUser } from "../services/addressService.js";
 import * as service from '../services/orderService.js';
 import { getAnotherUserService } from "../services/userService.js";
 
@@ -9,7 +8,6 @@ export const createOrder = async (req, res) => {
         const user = req.user;
         const { ...data } = req.body;
         if (!data.total_price) return res.status(400).send({ err: "Missing requried fields" });
-        if (data.address_id) await validateAddressToUser(user.id, data.address_id);
         if (data.promo_code_id) await removePromocodeFromUser(data.promo_code_id, user);
         data.user_id = user.id;
         data.order_status = 'processing';
@@ -86,7 +84,7 @@ export const getOrder = async (req, res) => {
 export const updateOrder = async (req, res) => {
     try {
         const { id } = req.params;
-        const { total_price, order_status, address_id, promo_code_id } = req.body;
+        const { total_price, order_status, promo_code_id } = req.body;
 
         const orders = await service.getOrders({ id, });
         const currentOrder = orders[0];
@@ -97,10 +95,6 @@ export const updateOrder = async (req, res) => {
         if (promo_code_id) {
             await removePromocodeFromUser(promo_code_id, user);
             currentOrder.promo_code_id = promo_code_id;
-        }
-        if (address_id) {
-            await validateAddressToUser(user.id, address_id);
-            currentOrder.address_id = address_id;
         }
 
         await currentOrder.save();

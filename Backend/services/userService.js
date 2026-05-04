@@ -67,7 +67,7 @@ export const updateUserService = async (user, data) => {
         throw new Error ("No user");
     }
 
-    const fieldToUpdate = ['name', 'phone', 'image_url', 'dob'];
+    const fieldToUpdate = ['name', 'phone', 'dob'];
 
     fieldToUpdate.forEach((field) => {
         if(data[field]) {

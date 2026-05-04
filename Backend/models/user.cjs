@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Cart, { foreignKey: 'user_id' });
       User.hasMany(models.Wishlist, { foreignKey: 'user_id' });
       User.hasMany(models.Order, { foreignKey: 'user_id', as: 'order' });
-      User.hasMany(models.Address, { foreignKey: 'user_id', as: 'address' });
       User.hasMany(models.Review, { foreignKey: 'user_id', as: 'review' });
 
       User.belongsToMany(models.PromoCode, {
@@ -83,23 +82,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
 
-    gender: {
-      type: DataTypes.ENUM('male', 'female'),
-      allowNull: false,
-    },
-
-    last_login: {
-      type: DataTypes.DATE,
-    },
-
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-
-    image_url: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
 
     is_verified: {

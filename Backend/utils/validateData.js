@@ -125,14 +125,9 @@ export const validateUserData = (userData) => {
         validateName(userData.name);
         validateEmail(userData.email);
         validatePassword(userData.password);
-        validateGender(userData.gender);
         
         if (userData.phone) {
             validatePhone(userData.phone);
-        }
-        
-        if (userData.image_url) {
-            validateImageUrl(userData.image_url);
         }
     } catch (err) {
         throw new Error(err)

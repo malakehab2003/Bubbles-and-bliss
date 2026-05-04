@@ -6,7 +6,6 @@ const db = require('./index.cjs');
 export const { 
     User,
     Cart,
-    Address,
     Order,
     Product,
     ProductImage,

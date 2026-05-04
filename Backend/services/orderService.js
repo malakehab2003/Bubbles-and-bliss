@@ -1,4 +1,4 @@
-import { Order, Address, User, PromoCode } from "../models/db.js";
+import { Order, User, PromoCode } from "../models/db.js";
 
 
 
@@ -12,10 +12,6 @@ export const getOrders = async (where) => {
                 model: User,
                 as: 'user',
                 attributes: ['id', 'name']
-            },
-            {
-                model: Address,
-                as: 'address',
             },
             {
                 model: PromoCode,

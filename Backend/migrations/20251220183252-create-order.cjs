@@ -36,14 +36,34 @@ module.exports = {
         onDelete: 'CASCADE',
       },
 
-      address_id: {
+      government_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
-          model: 'Addresses',
+          model: 'governments',
           key: 'id',
         },
         onDelete: 'CASCADE',
+      },
+
+      city_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'cities',
+          key: 'id',
+        },
+        onDelete: 'CASCADE',
+      },
+
+      address: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+
+      landmark: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
 
       phone: {

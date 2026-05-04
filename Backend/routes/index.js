@@ -1,6 +1,5 @@
 import express from 'express';
 import userRouter from './user.js';
-import addressRouter from './address.js';
 import productRouter from './product.js';
 import productImageRouter from './productImage.js';
 import governmentRouter from './government.js';
@@ -17,7 +16,6 @@ const router = express.Router();
 
 // all routers used are here
 router.use('/user', userRouter);
-router.use('/address', addressRouter);
 router.use('/product', productRouter);
 router.use('/product/image/', productImageRouter);
 router.use('/government', governmentRouter);

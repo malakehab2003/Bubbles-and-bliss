@@ -36,19 +36,9 @@ module.exports = {
         unique: true,
       },
 
-      gender: {
-        type: Sequelize.ENUM('male', 'female'),
-        allowNull: false,
-      },
-
       password: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-
-      image_url: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
 
       is_verified: {

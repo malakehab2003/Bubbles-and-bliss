@@ -9,8 +9,8 @@ import { hashPassword } from '../utils/hash.js';
 
 export const createUser = async (req, res) => {
     try {
-        const { name, dob, gender, phone, email, password, image_url } = req.body;
-        const userData = { name, dob, gender, phone, email, password, image_url };
+        const { name, dob, phone, email, password } = req.body;
+        const userData = { name, dob, phone, email, password };
 
         validate.validateUserData(userData);
 
@@ -62,14 +62,13 @@ export const login = async (req, res) => {
 export const update = async (req, res) => {
     try {
         const user = req.user;
-        const { name, phone, dob, image_url } = req.body;
+        const { name, phone, dob } = req.body;
 
         if (name) validate.validateName(name);
         if (phone) validate.validatePhone(phone);
         if (dob) validate.validateDob(dob);
-        if (image_url) validate.validateImageUrl(image_url);
 
-        const updatedUser = await userService.updateUserService(user, { name, phone, dob, image_url });
+        const updatedUser = await userService.updateUserService(user, { name, phone, dob });
 
         return res.status(200).send({
             message: "User updated successfully",
@@ -174,7 +173,7 @@ export const getAnotherUser = async (req, res) => {
 
 export const searchUsers = async (req, res) => {
     try {
-        const { q } = req.query;
+        let { q } = req.query;
         let users;
         if (!q) {
             users = await userService.getAllUsersService();

@@ -1,4 +1,4 @@
-USE lostfoundsystem;
+USE bubbles-and-bliss;
 
 INSERT INTO `governments` (`id`, `name`) VALUES
 (1, 'Cairo'),
