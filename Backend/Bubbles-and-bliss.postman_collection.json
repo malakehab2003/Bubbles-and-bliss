@@ -2930,6 +2930,1991 @@
           ]
         }
       ]
+    },
+    {
+      "name": "product Copy",
+      "item": [
+        {
+          "name": "list products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/product/list?status=active&min_price=1&max_price=10000&rate=1&name=Bed&sizes=Small, medium",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "active"
+                },
+                {
+                  "key": "min_price",
+                  "value": "1"
+                },
+                {
+                  "key": "max_price",
+                  "value": "10000"
+                },
+                {
+                  "key": "is_sale",
+                  "value": "true",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "rate",
+                  "value": "1"
+                },
+                {
+                  "key": "name",
+                  "value": "Bed"
+                },
+                {
+                  "key": "sizes",
+                  "value": "Small, medium",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "list products",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base}}/product/list?status=active&min_price=1&max_price=10000&rate=1&name=Bed&sizes=Small, medium",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "list"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "active"
+                    },
+                    {
+                      "key": "min_price",
+                      "value": "1"
+                    },
+                    {
+                      "key": "max_price",
+                      "value": "10000"
+                    },
+                    {
+                      "key": "is_sale",
+                      "value": "true",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "rate",
+                      "value": "1"
+                    },
+                    {
+                      "key": "name",
+                      "value": "Bed"
+                    },
+                    {
+                      "key": "sizes",
+                      "value": "Small, medium"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "462"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ce-IHnKPb03n/4FuKgvOhZUMUSrWNw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:03:29 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"products\": [\n        {\n            \"id\": 10,\n            \"name\": \"Pet Dog Bed\",\n            \"rate\": 4.5,\n            \"status\": \"active\",\n            \"price\": 49.99,\n            \"sizes\": [\n                \"Small\",\n                \"Medium\",\n                \"Large\"\n            ],\n            \"stock\": 60,\n            \"sale\": 0,\n            \"description\": \"Comfortable bed for your pet dogs.\",\n            \"created_at\": \"2026-05-05T15:53:45.000Z\",\n            \"updated_at\": \"2026-05-05T15:53:45.000Z\",\n            \"image\": [],\n            \"review\": [\n                {\n                    \"rate\": 5,\n                    \"message\": \"Very good quality and fast shipping.\",\n                    \"user\": {\n                        \"id\": 5,\n                        \"name\": \"Eve Davis\"\n                    },\n                    \"image\": []\n                }\n            ]\n        }\n    ],\n    \"pagination\": {\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPages\": 1\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/product/getProduct/1",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "getProduct",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get product",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base}}/product/getProduct/1",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "getProduct",
+                    "1"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "403"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"193-kpC5ApVj7RXVnNGHHdpIGbB0yQE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:03:44 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"product\": {\n        \"id\": 1,\n        \"name\": \"Smartphone X1\",\n        \"rate\": 4.5,\n        \"status\": \"active\",\n        \"price\": 499.99,\n        \"sizes\": null,\n        \"stock\": 50,\n        \"sale\": 10,\n        \"description\": \"Latest smartphone with powerful features.\",\n        \"created_at\": \"2026-05-05T15:53:45.000Z\",\n        \"updated_at\": \"2026-05-05T15:53:45.000Z\",\n        \"image\": [],\n        \"review\": [\n            {\n                \"rate\": 5,\n                \"message\": \"Great product, quality exceeded my expectations.\",\n                \"user\": {\n                    \"id\": 1,\n                    \"name\": \"Alice Johnson\"\n                },\n                \"image\": []\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "delete product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/product/delete/12",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "delete",
+                "12"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delete product",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/product/delete/12",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "delete",
+                    "12"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "42"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2a-a+2htZNpkCDaj0ausIFBiheaYZ4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:18:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Product deleted successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"update\",\r\n    \"status\": \"out of stock\",\r\n    \"price\": 32,\r\n    \"sizes\": [\"XXXL\"],\r\n    \"stock\": 32,\r\n    \"description\": \"No description needed\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/product/update/13",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "update",
+                "13"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update product",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"update\",\r\n    \"status\": \"out of stock\",\r\n    \"price\": 32,\r\n    \"sizes\": [\"XXXL\"],\r\n    \"stock\": 32,\r\n    \"description\": \"No description needed\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/product/update/13",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "update",
+                    "13"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "278"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"116-aRcI98X3W+96lCfxsO2KAi1vXuQ\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:18:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Product updated Successfully\",\n    \"product\": {\n        \"id\": 13,\n        \"name\": \"update\",\n        \"rate\": 0,\n        \"status\": \"out of stock\",\n        \"price\": 32,\n        \"sizes\": [\n            \"XXXL\"\n        ],\n        \"stock\": 32,\n        \"sale\": 20,\n        \"description\": \"No description needed\",\n        \"created_at\": \"2026-05-05T16:12:05.000Z\",\n        \"updated_at\": \"2026-05-05T16:18:14.782Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "create product Copy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "uuid": "491f3b39-d088-432f-ba4d-44e5d64a174d",
+                  "src": "/D:/hesham project/Bubbles-and-bliss/Backend/WhatsApp Image 2026-04-14 at 4.02.33 PM.jpeg"
+                },
+                {
+                  "key": "name",
+                  "value": "air jordon",
+                  "type": "text",
+                  "uuid": "d6df1e0d-cd2b-4b98-9f54-15662af00dc2"
+                },
+                {
+                  "key": "price",
+                  "value": "200",
+                  "type": "text",
+                  "uuid": "d38c9de4-d83c-4ccb-8711-68ae66f5376e"
+                },
+                {
+                  "key": "sale",
+                  "value": "20",
+                  "type": "text",
+                  "uuid": "8ba52741-caaa-4fb4-86dd-76c1c203e66d"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text",
+                  "uuid": "1e569cb5-0893-4968-b2fc-e2d538801dc2"
+                },
+                {
+                  "key": "stock",
+                  "value": "5",
+                  "type": "text",
+                  "uuid": "00759c32-9515-4601-b930-5eb362eabe7e"
+                },
+                {
+                  "key": "sizes",
+                  "value": "L",
+                  "type": "text",
+                  "uuid": "b182fc39-1005-4600-9202-b803781360d0"
+                },
+                {
+                  "key": "description",
+                  "value": "i am new",
+                  "type": "text",
+                  "uuid": "d2338987-a6d4-40b0-b8a7-a2e3863ec639"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}/product/create",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "create"
+              ]
+            },
+            "description": "**name, price, stock, description, category_id, brand_id, images_url  \nall requried**\n\nnot requried\n\n**rate, status, colors, sizes**"
+          },
+          "response": [
+            {
+              "name": "create product Copy",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "uuid": "491f3b39-d088-432f-ba4d-44e5d64a174d",
+                      "src": "/D:/hesham project/Bubbles-and-bliss/Backend/WhatsApp Image 2026-04-14 at 4.02.33 PM.jpeg"
+                    },
+                    {
+                      "key": "name",
+                      "value": "air jordon",
+                      "type": "text",
+                      "uuid": "d6df1e0d-cd2b-4b98-9f54-15662af00dc2"
+                    },
+                    {
+                      "key": "price",
+                      "value": "200",
+                      "type": "text",
+                      "uuid": "d38c9de4-d83c-4ccb-8711-68ae66f5376e"
+                    },
+                    {
+                      "key": "sale",
+                      "value": "20",
+                      "type": "text",
+                      "uuid": "8ba52741-caaa-4fb4-86dd-76c1c203e66d"
+                    },
+                    {
+                      "key": "status",
+                      "value": "active",
+                      "type": "text",
+                      "uuid": "1e569cb5-0893-4968-b2fc-e2d538801dc2"
+                    },
+                    {
+                      "key": "stock",
+                      "value": "5",
+                      "type": "text",
+                      "uuid": "00759c32-9515-4601-b930-5eb362eabe7e"
+                    },
+                    {
+                      "key": "sizes",
+                      "value": "L",
+                      "type": "text",
+                      "uuid": "b182fc39-1005-4600-9202-b803781360d0"
+                    },
+                    {
+                      "key": "description",
+                      "value": "i am new",
+                      "type": "text",
+                      "uuid": "d2338987-a6d4-40b0-b8a7-a2e3863ec639"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base}}/product/create",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "264"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"108-BJzY46HaTUMZ/lnNXqFHus+P5kU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:17:27 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Product created successfully\",\n    \"product\": {\n        \"rate\": 0,\n        \"id\": 19,\n        \"name\": \"air jordon\",\n        \"price\": \"200\",\n        \"status\": \"active\",\n        \"stock\": \"5\",\n        \"sizes\": \"L\",\n        \"description\": \"i am new\",\n        \"sale\": \"20\",\n        \"updated_at\": \"2026-05-05T16:17:25.923Z\",\n        \"created_at\": \"2026-05-05T16:17:25.923Z\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "promocode Copy",
+      "item": [
+        {
+          "name": "create promocode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"discr50\",\r\n    \"discount\": 50,\r\n    \"description\": \"No discription needed\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/promocode/create",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "create promocode",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"discr50\",\r\n    \"discount\": 50,\r\n    \"description\": \"No discription needed\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/promocode/create",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "172"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ac-pea2uSjx3fEspdwm1Nc1ll8fYnk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 16:08:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"promocode\": {\n        \"id\": 13,\n        \"code\": \"discr50\",\n        \"description\": \"No discription needed\",\n        \"discount\": 50,\n        \"updated_at\": \"2026-03-05T16:08:07.549Z\",\n        \"created_at\": \"2026-03-05T16:08:07.549Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "get promocodes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/promocode/list",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "list"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "get promocodes",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/promocode/list",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "list"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2132"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"854-R5BfVwHUJ8XRd17DTcKSG007wqY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 16:10:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"promocodes\": [\n        {\n            \"id\": 1,\n            \"code\": \"WELCOME10\",\n            \"description\": \"10% discount for new users\",\n            \"discount\": \"10.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 2,\n            \"code\": \"SAVE15\",\n            \"description\": \"Save 15% on your order\",\n            \"discount\": \"15.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 3,\n            \"code\": \"SUMMER20\",\n            \"description\": \"Summer offer 20% off\",\n            \"discount\": \"20.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 4,\n            \"code\": \"WINTER25\",\n            \"description\": \"Winter sale 25% discount\",\n            \"discount\": \"25.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 5,\n            \"code\": \"FLASH5\",\n            \"description\": \"Flash sale 5% off\",\n            \"discount\": \"5.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 6,\n            \"code\": \"BLACKFRIDAY30\",\n            \"description\": \"Black Friday 30% discount\",\n            \"discount\": \"30.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 7,\n            \"code\": \"NEWYEAR20\",\n            \"description\": \"New Year offer 20% off\",\n            \"discount\": \"20.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 8,\n            \"code\": \"VIP50\",\n            \"description\": \"VIP exclusive 50% discount\",\n            \"discount\": \"50.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 9,\n            \"code\": \"STUDENT12\",\n            \"description\": \"Student discount 12%\",\n            \"discount\": \"12.00\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 10,\n            \"code\": \"FREESHIP\",\n            \"description\": \"Free shipping equivalent discount\",\n            \"discount\": \"7.50\",\n            \"created_at\": \"2026-03-05T03:50:14.000Z\",\n            \"updated_at\": \"2026-03-05T03:50:14.000Z\"\n        },\n        {\n            \"id\": 11,\n            \"code\": \"dis50\",\n            \"description\": null,\n            \"discount\": \"50.00\",\n            \"created_at\": \"2026-03-05T16:06:42.000Z\",\n            \"updated_at\": \"2026-03-05T16:06:42.000Z\"\n        },\n        {\n            \"id\": 12,\n            \"code\": \"disc50\",\n            \"description\": null,\n            \"discount\": \"50.00\",\n            \"created_at\": \"2026-03-05T16:07:21.000Z\",\n            \"updated_at\": \"2026-03-05T16:07:21.000Z\"\n        },\n        {\n            \"id\": 13,\n            \"code\": \"discr50\",\n            \"description\": \"No discription needed\",\n            \"discount\": \"50.00\",\n            \"created_at\": \"2026-03-05T16:08:07.000Z\",\n            \"updated_at\": \"2026-03-05T16:08:07.000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "update promocode",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"discs50\",\r\n    \"discount\": 50,\r\n    \"description\": \"use now\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/promocode/update/12",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "update",
+                "12"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "update promocode",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"discs50\",\r\n    \"discount\": 50,\r\n    \"description\": \"use now\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/promocode/update/12",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "update",
+                    "12"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "44"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2c-38dAq39XMxw+jd8kX9DVUJniBiY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 16:24:24 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Promocode updated successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "delete promocode",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/promocode/delete/13",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "delete",
+                "13"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delete promocode",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/promocode/delete/13",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "delete",
+                    "13"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "44"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2c-qZg5H3PgdEI2Hlhgd+RfePJwHjA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 16:43:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Promocode deleted successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "apply promocode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"code\": \"WELCOME10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/promocode/apply",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "apply"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "apply promocode",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"code\": \"WELCOME10\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/promocode/apply",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "apply"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "203"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"cb-jGNgbKOxacpRlEL6LklFRHs2xMU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 17:10:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"promocode\": {\n        \"id\": 1,\n        \"code\": \"WELCOME10\",\n        \"description\": \"10% discount for new users\",\n        \"discount\": \"10.00\",\n        \"created_at\": \"2026-03-05T17:07:19.000Z\",\n        \"updated_at\": \"2026-03-05T17:07:19.000Z\",\n        \"Users\": [\n            {\n                \"id\": 59\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "send promocodes to users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"promocode_id\": 1,\r\n    \"users\": [1, 59, 3]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/promocode/send-promocodes",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "promocode",
+                "send-promocodes"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "send promocodes to users",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"promocode_id\": 1,\r\n    \"users\": [1, 59, 3]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/promocode/send-promocodes",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "promocode",
+                    "send-promocodes"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "37"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"25-BPOh2RWHe0Lhx1gegmqTYNRHDBc\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 17:28:34 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Promocode sent to users\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "review Copy",
+      "item": [
+        {
+          "name": "create reivew",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "uuid": "ef2fec37-b8da-4d97-af4a-9ad11b82dc35",
+                  "src": "/D:/baba/insurance cards/malak card.jpg"
+                },
+                {
+                  "key": "message",
+                  "value": "i am review",
+                  "type": "text",
+                  "uuid": "00faa6eb-6188-4952-88b3-62c538580d17"
+                },
+                {
+                  "key": "rate",
+                  "value": "5",
+                  "type": "text",
+                  "uuid": "e3267960-e172-4c40-9883-43e4a133f514"
+                },
+                {
+                  "key": "product_id",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "ab0013c1-e1a1-4987-8674-fc10d3da9337"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}/review/create",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "review",
+                "create"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "create reivew",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "uuid": "ef2fec37-b8da-4d97-af4a-9ad11b82dc35",
+                      "src": "/D:/baba/insurance cards/malak card.jpg"
+                    },
+                    {
+                      "key": "message",
+                      "value": "i am review",
+                      "type": "text",
+                      "uuid": "00faa6eb-6188-4952-88b3-62c538580d17"
+                    },
+                    {
+                      "key": "rate",
+                      "value": "5",
+                      "type": "text",
+                      "uuid": "e3267960-e172-4c40-9883-43e4a133f514"
+                    },
+                    {
+                      "key": "product_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "ab0013c1-e1a1-4987-8674-fc10d3da9337"
+                    }
+                  ],
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/review/create",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "review",
+                    "create"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "205"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"cd-C1M8dL5SfR1PlZ7MpcjJwh9At04\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 27 Apr 2026 03:02:41 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Review created successfully\",\n    \"review\": {\n        \"id\": 12,\n        \"message\": \"i am review\",\n        \"rate\": \"5\",\n        \"user_id\": 59,\n        \"product_id\": \"1\",\n        \"updated_at\": \"2026-04-27T03:02:32.318Z\",\n        \"created_at\": \"2026-04-27T03:02:32.318Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "delete reivew",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/review/delete/11",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "review",
+                "delete",
+                "11"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delete reivew",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/review/delete/11",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "review",
+                    "delete",
+                    "11"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "41"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"29-eJZH9QbGPKzQCQgLPX3JFUdcheo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:29:51 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Review deleted successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wishlist Copy",
+      "item": [
+        {
+          "name": "list wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/wishlist/list",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "wishlist",
+                "list"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "list wishlist",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/wishlist/list",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "wishlist",
+                    "list"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "403"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"193-dbjDhKt/YzvS19EHVmyUTdxuhok\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:32:00 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"wishlist\": [\n        {\n            \"id\": 31,\n            \"product_id\": 10,\n            \"created_at\": \"2026-05-05T16:31:54.000Z\",\n            \"updated_at\": \"2026-05-05T16:31:54.000Z\",\n            \"user_id\": 59,\n            \"product\": {\n                \"id\": 10,\n                \"name\": \"Pet Dog Bed\",\n                \"rate\": 4.5,\n                \"status\": \"active\",\n                \"price\": 49.99,\n                \"sizes\": [\n                    \"Small\",\n                    \"Medium\",\n                    \"Large\"\n                ],\n                \"stock\": 60,\n                \"sale\": 0,\n                \"description\": \"Comfortable bed for your pet dogs.\",\n                \"created_at\": \"2026-05-05T15:53:45.000Z\",\n                \"updated_at\": \"2026-05-05T15:53:45.000Z\"\n            }\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "add product to wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"product_id\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/wishlist/addProduct",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "wishlist",
+                "addProduct"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "add product to wishlist",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"product_id\": 10\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base}}/wishlist/addProduct",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "wishlist",
+                    "addProduct"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "182"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b6-VECpdTv2eLloNmpFtKIwYjLjbXw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:31:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Product added to wishlist successfully\",\n    \"wishlist\": {\n        \"id\": 31,\n        \"product_id\": 10,\n        \"user_id\": 59,\n        \"updated_at\": \"2026-05-05T16:31:54.107Z\",\n        \"created_at\": \"2026-05-05T16:31:54.107Z\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "delete product from wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/wishlist/delete/31",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "wishlist",
+                "delete",
+                "31"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delete product from wishlist",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/wishlist/delete/9",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "wishlist",
+                    "delete",
+                    "9"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "56"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"38-cmvSHFzwepcmHmpzL19ARyPFzlA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 16:33:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"product removed from wishlist successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "product image Copy",
+      "item": [
+        {
+          "name": "delete image",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}/product/image/delete/3",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "image",
+                "delete",
+                "3"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "delete image",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base}}/item/image/delete/12",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "item",
+                    "image",
+                    "delete",
+                    "12"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "40"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"28-UidbYt5pUQ0gFINFEUzdKxPKECE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 03 Feb 2026 01:21:29 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Image Deleted Successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "add image to product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "{{auth_key}}",
+                "value": "{{auth_value}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "uuid": "3d4ee5c9-0afe-49f3-a13a-066aa47ce448",
+                  "src": "/D:/baba/insurance cards/malak card.jpg"
+                },
+                {
+                  "key": "owner_id",
+                  "value": "1",
+                  "type": "text",
+                  "uuid": "35f681a1-e85e-4525-b771-4de00c92cbcf"
+                },
+                {
+                  "key": "owner_type",
+                  "value": "product",
+                  "type": "text",
+                  "uuid": "c7759eb8-fa7b-46a9-acb4-a5a7cefc36d1"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}/product/image/addImages",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "product",
+                "image",
+                "addImages"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "add image to product",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "{{auth_key}}",
+                    "value": "{{auth_value}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "images",
+                      "type": "file",
+                      "uuid": "3d4ee5c9-0afe-49f3-a13a-066aa47ce448",
+                      "src": "/D:/hesham project/Bubbles-and-bliss/Backend/WhatsApp Image 2026-04-14 at 4.02.33 PM.jpeg"
+                    },
+                    {
+                      "key": "owner_id",
+                      "value": "1",
+                      "type": "text",
+                      "uuid": "35f681a1-e85e-4525-b771-4de00c92cbcf"
+                    },
+                    {
+                      "key": "owner_type",
+                      "value": "product",
+                      "type": "text",
+                      "uuid": "c7759eb8-fa7b-46a9-acb4-a5a7cefc36d1"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base}}/product/image/addImages",
+                  "host": [
+                    "{{base}}"
+                  ],
+                  "path": [
+                    "product",
+                    "image",
+                    "addImages"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "39"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"27-VESb/ZSoAc1ghcdilJiA8f9Qls0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 05 May 2026 17:17:19 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"message\": \"Images Added Successfully\"\n}"
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [

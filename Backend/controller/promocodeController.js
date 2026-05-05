@@ -95,7 +95,7 @@ export const applyPromocode = async (req, res) => {
             include: {
                 model: User,
                 where: { id: user.id },
-                attributes: ["id"],
+                attributes: ["id", 'name'],
                 through: { attributes: [] }
             }
         });

@@ -1,5 +1,5 @@
 import cart from "../models/cart.cjs";
-import { Cart, Product, ProductImage } from "../models/db.js";
+import { Cart, Product, Image } from "../models/db.js";
 import * as service from '../services/cart.js';
 import { getProductService } from "../services/productService.js";
 
@@ -18,8 +18,9 @@ export const listCart = async (req, res) => {
                     attributes: ["name", "price", "sale"],
                     include: [
                         {
-                            model: ProductImage,
+                            model: Image,
                             as: 'image',
+                            attributes: ['id', 'url']
                         }
                     ]
                 }

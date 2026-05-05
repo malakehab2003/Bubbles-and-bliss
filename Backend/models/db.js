@@ -8,7 +8,7 @@ export const {
     Cart,
     Order,
     Product,
-    ProductImage,
+    Image,
     PromoCode,
     OrderItem,
     Review,

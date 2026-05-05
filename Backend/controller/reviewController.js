@@ -1,12 +1,13 @@
 import * as service from '../services/reviewService.js';
-import { Review } from '../models/db.js';
-import { validateImageUrl } from '../utils/validateData.js';
+import { Review, Image } from '../models/db.js';
+import { uploadToCloudinary } from '../utils/uploadPhotos.js';
 
 
 export const createReview = async (req, res) => {
     try {
-        const { message, rate, image_url, product_id } = req.body;
+        const { message, rate, product_id } = req.body;
         const user = req.user;
+        const file = req.file;
 
         if (
             !message ||
@@ -23,13 +24,21 @@ export const createReview = async (req, res) => {
             product_id,
         };
 
-        if (image_url) {
-            validateImageUrl(image_url);
-            data.image_url = image_url;
-        }
         const review = await Review.create(data)
-        
         if (!review) return res.status(400).send({ err: "Can't create review", });
+        review.dataValues.user = user.name;
+
+        if (file) {
+            const uploaded = await uploadToCloudinary(file.buffer);
+
+            await Image.create({
+                url: uploaded.url,
+                public_id: uploaded.public_id,
+                owner_id: review.id,
+                owner_type: "review",
+            });
+        }
+
 
         return res.status(201).send({
             message: "Review created successfully",

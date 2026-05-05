@@ -1,5 +1,6 @@
 import * as utils from '../utils/product.js';
-import { Product } from '../models/db.js';
+import { Product, Image } from '../models/db.js';
+import { uploadToCloudinary } from '../utils/uploadPhotos.js';
 
 
 export const listItemsService = async (filters, page, limit) => {
@@ -32,12 +33,26 @@ export const getProductService = async (id) => {
 }
 
 
-export const createProductService = async (data) => {
+export const createProductService = async (data, files) => {
     if (!data) throw new Error ("Missing data");
 
-    const product = Product.create(data);
-
+    const product = await Product.create(data);
     if (!product) throw new Error ("Can't create product");
+    
+    if (files && files.length > 0) {
+        const uploadedImages = await Promise.all(
+            files.map(file => uploadToCloudinary(file.buffer))
+        );
+
+        const imagesToCreate = uploadedImages.map(img => ({
+            url: img.url,
+            public_id: img.public_id,
+            owner_id: product.id,
+            owner_type: "product",
+        }));
+
+        await Image.bulkCreate(imagesToCreate);
+    }
 
     return product
 }

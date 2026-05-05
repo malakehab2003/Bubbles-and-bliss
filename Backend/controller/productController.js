@@ -1,5 +1,4 @@
 import * as service from '../services/productService.js';
-import { addProductImageService } from '../services/productImageService.js';
 import { Product } from '../models/db.js';
 import * as validate from '../utils/validateData.js';
 
@@ -48,24 +47,22 @@ export const getProudct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { images_url, sale, rate, ...rest } = req.body;
+        const { sale, rate, ...rest } = req.body;
         const user = req.user;
+        const files = req.files;
 
         if (
             !rest.name ||
             !rest.price ||
             !rest.stock ||
-            !rest.description ||
-            !images_url
+            !rest.description
         ) return res.status(400).send({ err: "Missing requried fields", });
 
         if (!sale) sale = 0;
         rest.sale = sale;
-        const product = await service.createProductService(rest);
+        const product = await service.createProductService(rest, files);
 
         if (!product) return res.status(400).send({ err: "Can't create product", });
-
-        if (images_url) await addProductImageService(product.id, images_url);
 
         return res.status(201).send({
             message: "Product created successfully",

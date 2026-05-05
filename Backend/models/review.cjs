@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Review.belongsTo(models.Product, { foreignKey: 'product_id', as: 'review' });
       Review.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+      Review.hasMany(models.Image, { foreignKey: "owner_id", as: 'image', constraints: false, scope: { owner_type: "review", }, });
+
     }
   }
   Review.init(
@@ -21,10 +23,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-      },
-
-      image_url: {
-        type: DataTypes.STRING,
       },
 
       message: {

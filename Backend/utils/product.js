@@ -1,5 +1,5 @@
 import { Op, fn, col } from 'sequelize';
-import { Product, ProductImage, Review, User } from '../models/db.js';
+import { Product, Image, Review, User } from '../models/db.js';
 
 export const buildWhereFilters = (filters) => {
     const where = {};
@@ -45,19 +45,24 @@ export const getProducts = async (where, limit, offset) => {
         offset: Number(offset),
         include: [
             {
-                model: ProductImage,
+                model: Image,
                 as: 'image',
-                attributes: ['id', 'image_url'],
+                attributes: ['id', 'url'],
             },
             {
                 model: Review,
                 as: 'review',
-                attributes: ['rate', 'message', 'image_url'],
+                attributes: ['rate', 'message'],
                 include: [
                     {
                         model: User,
                         as: 'user',
                         attributes: ["id", 'name'],
+                    },
+                    {
+                        model: Image,
+                        as: 'image',
+                        attributes: ['id', 'url'],
                     }
                 ]
             },

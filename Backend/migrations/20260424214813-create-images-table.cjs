@@ -1,29 +1,33 @@
-'use strict';
-/** @type {import('sequelize-cli').Migration} */
+"use strict";
+
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ProductImages', {
+    await queryInterface.createTable("images", {
       id: {
-        allowNull: false,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        allowNull: false,
       },
 
-      image_url: {
+      url: {
         type: Sequelize.STRING,
         allowNull: false,
       },
 
-      product_id: {
+      public_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+
+      owner_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-          model: 'Products',
-          key: 'id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        allowNull: false,
+      },
+
+      owner_type: {
+        type: Sequelize.ENUM("user", "item", "product", "review"),
+        allowNull: false,
       },
 
       created_at: {
@@ -43,6 +47,7 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ProductImages');
+    await queryInterface.dropTable("images");
+    await queryInterface.sequelize.query("DROP TYPE IF EXISTS enum_images_owner_type;");
   },
 };
