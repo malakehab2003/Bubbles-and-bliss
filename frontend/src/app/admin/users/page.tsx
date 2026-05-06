@@ -1,269 +1,288 @@
 "use client";
-import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { useState } from "react";
+import { Search, Shield, User, Crown, Eye, UserCog, ShoppingBag, Mail, Phone, Calendar } from "lucide-react";
+import { useAllUsers } from "@/hooks/useAllUsers";
+import { useMakeAdmin } from "@/hooks/useMakeAdmin";
 
-interface User {
+interface UserType {
   id: number;
   name: string;
   email: string;
   role: string;
-  is_verified: boolean;
+  is_verified?: boolean;
   phone?: string;
   dob?: string;
 }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchId, setSearchId] = useState("");
-  const [searchedUser, setSearchedUser] = useState<User | null>(null);
+  const { users: allUsers, isLoading, refetch } = useAllUsers();
+  const { makeAdmin, isPending: isMakingAdmin } = useMakeAdmin();
+  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<"users" | "admins">("users");
+  const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
 
-  // جلب كل المستخدمين (لو في endpoint مخصص)
-  // بما إن الـ API مش عنده endpoint لجلب كل المستخدمين، هنجيبهم عن طريق البحث
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const admins = (allUsers || []).filter(u => u.role === "admin");
+  const regularUsers = (allUsers || []).filter(u => u.role !== "admin");
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    const token = localStorage.getItem("token");
-    
-    // مؤقتاً، نجيب المستخدم الحالي
-    try {
-      const res = await fetch("http://localhost:5000/api/user/getMe", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const currentUser = await res.json();
-      if (res.ok) {
-        setUsers([currentUser]);
-      }
-    } catch (error) {
-      console.error("Error fetching current user:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const filteredAdmins = admins.filter(u =>
+    u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const searchUser = async () => {
-    const token = localStorage.getItem("token");
-    const params = new URLSearchParams();
-    if (searchEmail) params.append("email", searchEmail);
-    if (searchId) params.append("id", searchId);
-    
-    if (!searchEmail && !searchId) {
-      alert("Please enter either email or ID");
-      return;
-    }
+  const filteredUsers = regularUsers.filter(u =>
+    u.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    try {
-      const res = await fetch(`http://localhost:5000/api/user/getUser?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      if (res.ok && data.user) {
-        setSearchedUser(data.user);
-        // إضافة المستخدم إلى القائمة إذا لم يكن موجوداً
-        setUsers(prev => {
-          if (!prev.find(u => u.id === data.user.id)) {
-            return [data.user, ...prev];
-          }
-          return prev;
-        });
-      } else {
-        alert("User not found");
-        setSearchedUser(null);
-      }
-    } catch (error) {
-      console.error("Error searching user:", error);
-      alert("Error searching user");
-    }
-  };
-
-  const makeAdmin = async (userId: number) => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch("http://localhost:5000/api/user/createAdmin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ user_id: userId }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert("User promoted to admin!");
-        // تحديث حالة المستخدم في القائمة
-        setUsers(prev => prev.map(user => 
-          user.id === userId ? { ...user, role: "admin" } : user
-        ));
-        setSearchedUser(null);
-      } else {
-        alert(data.error || "Failed to make admin");
-      }
-    } catch (error) {
-      console.error("Error making admin:", error);
-      alert("Error making admin");
-    }
-  };
-
-  const handleLogout = async (userId: number) => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch("http://localhost:5000/api/user/logOut", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.ok) {
-        alert("User logged out successfully");
-      }
-    } catch (error) {
-      console.error("Error logging out:", error);
-      alert("Error logging out");
+  const handleMakeAdmin = async (userId: number, userName: string) => {
+    if (confirm(`Are you sure you want to make "${userName}" an admin?`)) {
+      await makeAdmin(userId);
+      refetch();
     }
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-12 h-12 border-4 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center items-center h-64">
+        <div className="w-10 h-10 border-3 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-serif text-[#5A3A2A] mb-6">Users Management</h1>
+    <div className="min-h-screen bg-[#F3E8DE]">
+      <div className="max-w-6xl mx-auto p-6">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#8B5E3C]/20 mb-4">
+            <Shield className="w-8 h-8 text-[#5A3A2A]" />
+          </div>
+          <h1 className="text-3xl font-serif font-bold text-[#5A3A2A]">User Management</h1>
+          <p className="text-[#5A3A2A]/80 mt-2">Manage and monitor all users and administrators</p>
+        </div>
 
-      {/* Search Section */}
-      <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 shadow-md mb-6">
-        <h2 className="text-lg font-serif text-[#5A3A2A] mb-4">Search User</h2>
-        <div className="flex flex-wrap gap-4">
-          <div className="flex-1">
-            <label className="block text-[#8B5E3C] text-sm mb-1">Email</label>
-            <input
-              type="email"
-              value={searchEmail}
-              onChange={(e) => setSearchEmail(e.target.value)}
-              placeholder="user@example.com"
-              className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 ">
+          <div className="bg-white rounded-xl p-4 shadow-sm border-l-4]">
+            <p className="text-sm font-medium text-[#5A3A2A]">Administrators</p>
+            <p className="text-2xl font-bold text-[#8B5E3C]">{admins.length}</p>
           </div>
-          <div className="flex-1">
-            <label className="block text-[#8B5E3C] text-sm mb-1">ID</label>
-            <input
-              type="number"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-              placeholder="User ID"
-              className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
-            />
+          <div className="bg-white rounded-xl p-4 shadow-sm border-l-4">
+            <p className="text-sm font-medium text-[#5A3A2A]">Regular Users</p>
+            <p className="text-2xl font-bold text-[#8B5E3C]">{regularUsers.length}</p>
           </div>
-          <div className="flex items-end">
-            <button
-              onClick={searchUser}
-              className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-6 py-2 rounded-lg transition flex items-center gap-2"
-            >
-              <Search className="w-4 h-4" />
-              Search
-            </button>
+          <div className="bg-white rounded-xl p-4 shadow-sm border-l-4">
+            <p className="text-sm font-medium text-[#5A3A2A]">Total Users</p>
+            <p className="text-2xl font-bold text-[#8B5E3C]">{allUsers?.length || 0}</p>
           </div>
         </div>
 
-        {/* Search Result */}
-        {searchedUser && (
-          <div className="mt-4 p-4 bg-[#E6D5C3]/30 rounded-lg">
-            <p className="text-[#5A3A2A] font-semibold">Search Result:</p>
-            <div className="flex justify-between items-center mt-2">
-              <div>
-                <p><span className="text-[#8B5E3C]">Name:</span> {searchedUser.name}</p>
-                <p><span className="text-[#8B5E3C]">Email:</span> {searchedUser.email}</p>
-                <p><span className="text-[#8B5E3C]">Role:</span> {searchedUser.role}</p>
-              </div>
-              {searchedUser.role !== "admin" && (
-                <button
-                  onClick={() => makeAdmin(searchedUser.id)}
-                  className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-4 py-2 rounded-lg transition"
-                >
-                  Make Admin
-                </button>
-              )}
-            </div>
+        {/* Search Bar */}
+        <div className="bg-white rounded-xl shadow-sm border border-[#E6D5C3] p-4 mb-6">
+          <div className="relative">
+            <Search className="absolute m-4 left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#5A3A2A]" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by name or email..."
+              className="w-full pl-10 pr-4 py-2  bg-[#F3E8DE]/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] focus:border-transparent text-black font-medium placeholder:text-gray-400"
+            />
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* Users List */}
-      <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-6 shadow-md overflow-x-auto">
-        <h2 className="text-lg font-serif text-[#5A3A2A] mb-4">All Users</h2>
-        <table className="w-full">
-         <thead>
-  <tr className="border-b border-[#E6D5C3]">
-    <th className="text-left py-3 text-[#5A3A2A]">ID</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Name</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Email</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Phone</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Role</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Verified</th>
-    <th className="text-left py-3 text-[#5A3A2A]">Actions</th>
-   </tr>
-</thead>
-<tbody>
-  {users.map((user) => (
-    <tr key={user.id} className="border-b  border-[#E6D5C3] hover:bg-white/30">
-      <td className="ps-5 text-[#8B5E3C] ">{user.id}</td>
-      <td className="ps-3 text-[#8B5E3C] align-top">{user.name}</td>
-      <td className="ps-5 text-[#8B5E3C] align-top">{user.email}</td>
-      <td className="p-5 text-[#8B5E3C] ">{user.phone || "-"}</td>
-      <td className="ps-5 align-top">
-        <span className={`px-2 text-black text-xl font-bold rounded-full ${
-          user.role === "admin" 
-            ? "bg-purple-100 text-purple-600" 
-            : "bg-gray-100 text-gray-600"
-        }`}>
-          {user.role}
-        </span>
-      </td>
-      <td className="ps-5 align-top">
-        {user.is_verified ? (
-          <span className="text-green-600">Verified</span>
-        ) : (
-          <span className="text-red-600">Not verified</span>
-        )}
-      </td>
-      <td className="py-3 align-top">
-        <div className="flex flex-col gap-2">
-          {user.role !== "admin" && (
-            <button
-              onClick={() => makeAdmin(user.id)}
-              className="bg-[#8B5E3C] hover:bg-[#5A3A2A] px-3 py-1 rounded-lg text-sm transition whitespace-nowrap"
-            >
-              Make Admin
-            </button>
-          )}
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6 border-b border-[#E6D5C3]">
           <button
-            onClick={() => handleLogout(user.id)}
-            className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-3 py-1 rounded-lg text-sm transition whitespace-nowrap"
+            onClick={() => setActiveTab("users")}
+            className={`px-5 py-2.5 font-bold transition-all rounded-t-lg flex items-center gap-2 ${
+              activeTab === "users"
+                ? "bg-white text-[#5A3A2A] border-t border-x border-[#E6D5C3]"
+                : "text-[#8B5E3C]/70 hover:text-[#5A3A2A]"
+            }`}
           >
-            Logout
+            <User className="w-4 h-4" />
+            Users ({filteredUsers.length})
+          </button>
+          <button
+            onClick={() => setActiveTab("admins")}
+            className={`px-5 py-2.5 font-bold transition-all rounded-t-lg flex items-center gap-2 ${
+              activeTab === "admins"
+                ? "bg-white text-[#5A3A2A] border-t border-x border-[#E6D5C3]"
+                : "text-[#8B5E3C]/70 hover:text-[#8B5E3C]"
+            }`}
+          >
+            <Shield className="w-4 h-4" />
+            Administrators ({filteredAdmins.length})
           </button>
         </div>
-      </td>
-    </tr>
-  ))}
-</tbody>
-        </table>
 
-        {users.length === 0 && (
-          <div className="text-center py-8 text-[#8B5E3C]">
-            No users found. Search for users using email or ID.
+        {/* Users List */}
+        {activeTab === "users" && (
+          <div className="space-y-3 max-h-[calc(100vh-380px)] overflow-y-auto pr-1">
+            {filteredUsers.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-xl">
+                <User className="w-12 h-12 mx-auto text-[#8B5E3C]/30 mb-3" />
+                <p className="text-gray-600 font-medium">No users found</p>
+              </div>
+            ) : (
+              filteredUsers.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isAdmin={false}
+                  onMakeAdmin={handleMakeAdmin}
+                  isMakingAdmin={isMakingAdmin}
+                  setSelectedUser={setSelectedUser}
+                  selectedUser={selectedUser}
+                />
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Admins List */}
+        {activeTab === "admins" && (
+          <div className="space-y-3 max-h-[calc(100vh-380px)] overflow-y-auto pr-1">
+            {filteredAdmins.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-xl">
+                <Shield className="w-12 h-12 mx-auto text-[#8B5E3C] mb-3" />
+                <p className="text-gray-600 font-medium">No administrators found</p>
+              </div>
+            ) : (
+              filteredAdmins.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  isAdmin={true}
+                  onMakeAdmin={handleMakeAdmin}
+                  isMakingAdmin={isMakingAdmin}
+                  setSelectedUser={setSelectedUser}
+                  selectedUser={selectedUser}
+                />
+              ))
+            )}
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+// User Card Component
+function UserCard({ 
+  user, 
+  isAdmin, 
+  onMakeAdmin, 
+  isMakingAdmin,
+  setSelectedUser,
+  selectedUser
+}: { 
+  user: UserType; 
+  isAdmin: boolean;
+  onMakeAdmin: (id: number, name: string) => void;
+  isMakingAdmin: boolean;
+  setSelectedUser: (user: UserType | null) => void;
+  selectedUser: UserType | null;
+}) {
+  const isExpanded = selectedUser?.id === user.id;
+  const initials = user.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'U';
+
+  return (
+    <div className={`bg-white rounded-xl shadow-sm border transition-all duration-200 ${
+      isExpanded ? 'border-[#8B5E3C] shadow-md' : 'border-[#E6D5C3] hover:shadow-md'
+    }`}>
+      <div 
+        className="p-4 text-[#5A3A2A] cursor-pointer"
+        onClick={() => setSelectedUser(isExpanded ? null : user)}
+      >
+        <div className="flex items-center justify-between gap-3">
+          {/* Avatar + Info */}
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 ${
+              isAdmin ? "bg-[#5A3A2A] text-[#E6D5C3]" : "bg-[#E6D5C3] text-[#5A3A2A]"
+            }`}>
+              {initials}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-bold text-gray-800 truncate">{user.name}</h3>
+                {isAdmin ? (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-[#E6D5C3] text-[#5A3A2A]">
+                    <Shield className="w-3 h-3" /> Admin
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-[#E6D5C3] text-[#5A3A2A]">
+                    <User className="w-3 h-3" /> User
+                  </span>
+                )}
+              </div>
+              <p className="text-sm font-medium text-gray-600 truncate">{user.email}</p>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            {!isAdmin && (
+              <button
+                onClick={() => onMakeAdmin(user.id, user.name)}
+                disabled={isMakingAdmin}
+                className="px-3 py-1.5 bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white font-semibold text-sm rounded-lg transition flex items-center gap-1 disabled:opacity-50"
+              >
+                <Crown className="w-3.5 h-3.5" />
+                Make Admin
+              </button>
+            )}
+            <button className="p-1.5 text-gray-500 hover:text-[#5A3A2A] transition font-bold">
+              {isExpanded ? "▲" : "▼"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Expanded Details */}
+      {isExpanded && (
+        <div className="px-4 pb-4 pt-2 border-t border-[#E6D5C3] bg-[#F3E8DE]/30 rounded-b-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-[#5A3A2A] flex items-center gap-2">
+                <UserCog className="w-4 h-4" /> Account Information
+              </h4>
+              <div className="bg-white rounded-lg p-3 space-y-2">
+                <div className="flex items-center gap-2 text-sm">
+                  <Mail className="w-4 h-4 text-[#8B5E3C]" />
+                  <span className="text-[#5A3A2A] font-medium">{user.email}</span>
+                </div>
+                {user.phone && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Phone className="w-4 h-4 text-[#8B5E3C]" />
+                    <span className="text-[#5A3A2A] font-medium">{user.phone}</span>
+                  </div>
+                )}
+                {user.dob && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <Calendar className="w-4 h-4 text-[#8B5E3C]" />
+                    <span className="text-[#5A3A2A] font-medium">{new Date(user.dob).toLocaleDateString()}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-sm">
+                  <Shield className="w-4 h-4 text-[#8B5E3C]" />
+                  <span className="text-[#5A3A2A] font-medium">Role: <span className="font-bold">{user.role || "user"}</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-sm font-bold text-[#5A3A2A] flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4" /> Quick Actions
+              </h4>
+              <div className="bg-white rounded-lg p-3 space-y-2">
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
