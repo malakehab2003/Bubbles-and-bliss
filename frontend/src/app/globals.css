@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+    --background: 33 57% 96%;     /* #F3E8DE */
+    --foreground: 30 33% 23%;      /* #8B5E3C */
+    --card: 33 57% 96%;
+    --card-foreground: 30 33% 23%;
+    --popover: 33 57% 96%;
+    --popover-foreground: 30 33% 23%;
+    --primary: 30 33% 23%;         /* #8B5E3C */
+    --primary-foreground: 33 57% 96%;
+    --secondary: 30 29% 72%;       /* #E6D5C3 */
+    --secondary-foreground: 30 33% 23%;
+    --muted: 30 29% 72%;
+    --muted-foreground: 30 20% 40%;
+    --accent: 30 29% 72%;
+    --accent-foreground: 30 33% 23%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 33 57% 96%;
+    --border: 30 29% 72%;
+    --input: 30 29% 72%;
+    --ring: 30 33% 23%;
+    --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer utilities {
+  .bg-beige-light {
+    background-color: #F3E8DE;
+  }
+  .bg-beige-medium {
+    background-color: #E6D5C3;
+  }
+  .text-brown-warm {
+    color: #8B5E3C;
+  }
+  .text-brown-dark {
+    color: #5A3A2A;
+  }
+  .bg-brown-warm {
+    background-color: #8B5E3C;
+  }
+  .bg-brown-dark {
+    background-color: #5A3A2A;
+  }
+  .border-brown-warm {
+    border-color: #8B5E3C;
+  }
+  .border-brown-dark {
+    border-color: #5A3A2A;
+  }
+  .hover\:bg-brown-dark:hover {
+    background-color: #5A3A2A;
+  }
+  .hover\:text-brown-dark:hover {
+    color: #5A3A2A;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
