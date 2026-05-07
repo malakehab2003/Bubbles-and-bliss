@@ -1,13 +1,119 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { useProduct } from "@/hooks/useProduct";
+
+// خيارات المقاسات المتاحة في الـ Backend
+const SIZES = ["Small", "Medium", "Large", "X-Large"];
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const productId = parseInt(params.id as string);
   const { product, isLoading } = useProduct(productId);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null); // تغيير: يمكن يكون null
+
+  const addToCart = async () => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      toast.error("Please login first");
+      router.push("/signin");
+      return;
+    }
+
+    setIsAddingToCart(true);
+
+    try {
+      // بناء الـ payload - size optional
+      const payload: any = {
+        product_id: productId,
+        quantity: quantity,
+      };
+
+      // أضف size فقط لو تم اختياره وليس null
+      if (selectedSize && selectedSize !== "") {
+        payload.size = selectedSize;
+      }
+
+      console.log("📤 Sending payload:", payload);
+
+      const res = await fetch("http://localhost:5000/api/cart/addProduct", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      console.log("📥 Response:", { status: res.status, data });
+
+      if (res.ok) {
+        toast.success(`Added ${quantity} item(s) to cart!`);
+        window.dispatchEvent(new Event("cartUpdated"));
+      } else {
+        toast.error(data.err || data.message || "Failed to add to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const buyNow = async () => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      toast.error("Please login first");
+      router.push("/signin");
+      return;
+    }
+
+    setIsAddingToCart(true);
+
+    try {
+      const payload: any = {
+        product_id: productId,
+        quantity: quantity,
+      };
+
+      if (selectedSize && selectedSize !== "") {
+        payload.size = selectedSize;
+      }
+
+      const res = await fetch("http://localhost:5000/api/cart/addProduct", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        toast.success(`Added ${quantity} item(s) to cart!`);
+        window.dispatchEvent(new Event("cartUpdated"));
+        router.push("/cart");
+      } else {
+        toast.error(data.err || data.message || "Failed to add to cart");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Something went wrong");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -34,6 +140,19 @@ export default function ProductDetailPage() {
     ? product.price * (1 - product.sale / 100) 
     : product.price;
 
+  const getProductImage = () => {
+    if (product.image && product.image.length > 0) {
+      const firstImage = product.image[0];
+      return firstImage?.url || firstImage?.image_url || null;
+    }
+    if (product.images && product.images.length > 0) {
+      return product.images[0]?.url || null;
+    }
+    return null;
+  };
+
+  const imageUrl = getProductImage();
+
   return (
     <div className="bg-[#F3E8DE] min-h-screen py-12">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -41,33 +160,20 @@ export default function ProductDetailPage() {
           ← Back to Collection
         </Link>
         
-        <div className="grid md:grid-cols-2 gap-12 bg-white/30 rounded-2xl p-8">
+        <div className="grid md:grid-cols-2 gap-12 bg-white/30 backdrop-blur-sm rounded-2xl p-8">
           {/* Product Images */}
           <div className="space-y-4">
             <div className="bg-[#E6D5C3] h-96 rounded-lg flex items-center justify-center overflow-hidden">
-              {product.images?.[0]?.url ? (
-                <Image
-                  src={product.images[0].url}
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
                   alt={product.name}
-                  width={400}
-                  height={400}
                   className="object-cover w-full h-full"
                 />
               ) : (
                 <span className="text-6xl text-[#8B5E3C]">🖼️</span>
               )}
             </div>
-            
-            {/* Thumbnails */}
-            {product.images && product.images.length > 1 && (
-              <div className="flex gap-2">
-                {product.images.slice(1, 4).map((img) => (
-                  <div key={img.id} className="w-20 h-20 bg-[#E6D5C3] rounded-lg overflow-hidden">
-                    <Image src={img.url} alt={product.name} width={80} height={80} className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
           
           {/* Product Info */}
@@ -87,6 +193,58 @@ export default function ProductDetailPage() {
             </div>
             
             <p className="text-[#5A3A2A] mb-6 leading-relaxed">{product.description}</p>
+            
+            {/* Size Selector - Optional */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-[#5A3A2A] mb-3">Select Size (Optional)</h3>
+              <div className="flex gap-3 flex-wrap">
+                <button
+                  onClick={() => setSelectedSize(null)}
+                  className={`px-4 py-2 rounded-full transition duration-300 ${
+                    selectedSize === null
+                      ? "bg-[#8B5E3C] text-white"
+                      : "bg-white/50 border border-[#E6D5C3] text-[#5A3A2A] hover:bg-[#E6D5C3]"
+                  }`}
+                >
+                  No Size
+                </button>
+                {SIZES.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-full transition duration-300 ${
+                      selectedSize === size
+                        ? "bg-[#8B5E3C] text-white"
+                        : "bg-white/50 border border-[#E6D5C3] text-[#5A3A2A] hover:bg-[#E6D5C3]"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            {/* Quantity Selector */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-[#5A3A2A] mb-3">Quantity</h3>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-8 rounded-full bg-[#E6D5C3] text-[#5A3A2A] hover:bg-[#8B5E3C] hover:text-white transition"
+                >
+                  -
+                </button>
+                <span className="text-xl font-semibold text-[#5A3A2A] min-w-[40px] text-center">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-8 rounded-full bg-[#E6D5C3] text-[#5A3A2A] hover:bg-[#8B5E3C] hover:text-white transition"
+                >
+                  +
+                </button>
+              </div>
+            </div>
             
             {product.colors && product.colors.length > 0 && (
               <div className="mb-6">
@@ -108,13 +266,32 @@ export default function ProductDetailPage() {
             </div>
             
             <div className="flex gap-4 mt-8">
-              <button className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-8 py-3 rounded-full transition duration-300">
-                Add to Cart
+              <button
+                onClick={addToCart}
+                disabled={isAddingToCart || product.stock === 0}
+                className="flex-1 bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-6 py-3 rounded-full transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isAddingToCart ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Adding...
+                  </span>
+                ) : (
+                  "Add to Cart"
+                )}
               </button>
-              <button className="border-2 border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white px-8 py-3 rounded-full transition duration-300">
+              <button
+                onClick={buyNow}
+                disabled={isAddingToCart || product.stock === 0}
+                className="flex-1 border-2 border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white px-6 py-3 rounded-full transition duration-300 disabled:opacity-50"
+              >
                 Buy Now
               </button>
             </div>
+            
+            {product.stock === 0 && (
+              <p className="text-red-500 text-sm mt-3 text-center">Out of stock</p>
+            )}
           </div>
         </div>
       </div>

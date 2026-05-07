@@ -14,7 +14,6 @@ export default function CreateProductPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<CreateProductForm & { imageFiles?: FileList }>({
     resolver: zodResolver(CreateProductSchema),
@@ -30,6 +29,8 @@ export default function CreateProductPage() {
       sizes: [],
     },
   });
+
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -58,18 +59,16 @@ export default function CreateProductPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white/40 backdrop-blur-sm rounded-2xl p-8 shadow-md space-y-6">
-        {/* Name */}
         <div>
           <label className="block text-[#5A3A2A] mb-2">Product Name *</label>
           <input
             {...register("name")}
             type="text"
-            className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+            className="w-full px-4 py-2 text-black not-last-of-type: bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
           />
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-[#5A3A2A] mb-2">Description *</label>
           <textarea
@@ -81,9 +80,8 @@ export default function CreateProductPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {/* Price */}
           <div>
-            <label className="block  text-[#5A3A2A] mb-2">Price (EGP) *</label>
+            <label className="block text-[#5A3A2A] mb-2">Price (EGP) *</label>
             <input
               {...register("price")}
               type="number"
@@ -92,8 +90,18 @@ export default function CreateProductPage() {
             />
             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>}
           </div>
+          <div>
+            <label className="block text-[#5A3A2A] mb-2">Stock *</label>
+            <input
+              {...register("stock")}
+              type="number"
+              className="w-full px-4 py-2 text-black bg-white/50 border border-[#E6D5C3] rounded-lg"
+            />
+            {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock.message}</p>}
+          </div>
+        </div>
 
-          {/* Sale */}
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-[#5A3A2A] mb-2">Sale (%)</label>
             <input
@@ -104,21 +112,6 @@ export default function CreateProductPage() {
             />
             {errors.sale && <p className="text-red-500 text-sm mt-1">{errors.sale.message}</p>}
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          {/* Stock */}
-          <div>
-            <label className="block text-[#5A3A2A] mb-2">Stock *</label>
-            <input
-              {...register("stock")}
-              type="number"
-              className="w-full px-4 py-2 text-black bg-white/50 border border-[#E6D5C3] rounded-lg"
-            />
-            {errors.stock && <p className="text-red-500 text-sm mt-1">{errors.stock.message}</p>}
-          </div>
-
-          {/* Category ID */}
           <div>
             <label className="block text-[#5A3A2A] mb-2">Category ID *</label>
             <input
@@ -130,7 +123,6 @@ export default function CreateProductPage() {
           </div>
         </div>
 
-        {/* Brand ID */}
         <div>
           <label className="block text-[#5A3A2A] mb-2">Brand ID *</label>
           <input
@@ -141,7 +133,6 @@ export default function CreateProductPage() {
           {errors.brand_id && <p className="text-red-500 text-sm mt-1">{errors.brand_id.message}</p>}
         </div>
 
-        {/* Colors */}
         <div>
           <label className="block text-[#5A3A2A] mb-2">Colors (comma separated)</label>
           <input
@@ -151,7 +142,6 @@ export default function CreateProductPage() {
           />
         </div>
 
-        {/* Images */}
         <div>
           <label className="block text-[#5A3A2A] mb-2">Product Images</label>
           <input
@@ -170,7 +160,6 @@ export default function CreateProductPage() {
           )}
         </div>
 
-        {/* Submit */}
         <div className="flex gap-4 pt-4">
           <button
             type="submit"

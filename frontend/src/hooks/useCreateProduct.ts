@@ -10,101 +10,76 @@ export function useCreateProduct() {
 
   const { mutate: createProduct, isPending } = useMutation({
     mutationFn: async (productData: CreateProductForm & { images?: File[] }) => {
-      const formData = new FormData();
+      // Step 1: Create product first
+      const productPayload = {
+        name: productData.name,
+        description: productData.description,
+        price: productData.price,
+        stock: productData.stock,
+        category_id: productData.category_id,
+        brand_id: productData.brand_id || 1,
+        sale: productData.sale || 0,
+        rate: productData.rate || 0,
+        colors: productData.colors || [],
+        sizes: productData.sizes || [],
+      };
 
-      // ✅ إضافة الصور
-      if (productData.images && productData.images.length > 0) {
-        productData.images.forEach((img) => {
-          formData.append("images", img);
-        });
-      }
-
-      // ✅ الحقول الأساسية
-      formData.append("name", productData.name);
-      formData.append("price", String(productData.price));
-      formData.append("description", productData.description);
-      formData.append("category_id", String(productData.category_id));
-      formData.append("brand_id", String(productData.brand_id || 1));
-      formData.append("stock", String(productData.stock || 0));
-      formData.append("sale", String(productData.sale || 0));
-      formData.append("rate", String(productData.rate || 0));
-
-      // ✅ الألوان
-      if (productData.colors && productData.colors.length > 0) {
-        productData.colors.forEach((color) => {
-          formData.append("colors", color);
-        });
-      }
-
-      // ✅ المقاسات
-      if (productData.sizes && productData.sizes.length > 0) {
-        productData.sizes.forEach((size) => {
-          formData.append("sizes", size);
-        });
-      }
-
-      console.log("📤 Sending formData with product info");
+      console.log("📤 Creating product:", productPayload);
 
       const token = localStorage.getItem("token");
       
-      const res = await fetch("http://localhost:5000/api/product/create", {
+      const createRes = await fetch("http://localhost:5000/api/product/create", {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: formData,
+        body: JSON.stringify(productPayload),
       });
 
-      const data = await res.json();
+      const createData = await createRes.json();
 
-      if (!res.ok) {
-        throw new Error(data.err || data.message || "Failed to create product");
+      if (!createRes.ok) {
+        throw new Error(createData.err || createData.message || "Failed to create product");
       }
 
-      return data;
+      const productId = createData.product?.id || createData.id;
+      console.log("✅ Product created with ID:", productId);
+
+      // Step 2: Upload images if exists
+      if (productData.images && productData.images.length > 0 && productId) {
+        const formData = new FormData();
+        productData.images.forEach((img) => {
+          formData.append("images", img);
+        });
+        formData.append("owner_id", String(productId));
+        formData.append("owner_type", "product");
+
+        const imageRes = await fetch("http://localhost:5000/api/product/image/addImages", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+
+        const imageData = await imageRes.json();
+
+        if (!imageRes.ok) {
+          console.warn("Image upload failed:", imageData);
+          toast.warning("Product created but image upload failed");
+        } else {
+          console.log("✅ Images uploaded successfully");
+        }
+      }
+
+      return createData;
     },
 
     onSuccess: (data) => {
-      // ✅ تحديث cache فوراً
-      const newProduct = data.product || data;
-      
-      queryClient.setQueryData(["products"], (oldData: any) => {
-        console.log("📦 Old products:", oldData);
-        console.log("🆕 New product:", newProduct);
-        
-        if (!oldData) return { products: [newProduct], pagination: { total: 1 } };
-        
-        // لو كان Array
-        if (Array.isArray(oldData)) {
-          return [newProduct, ...oldData];
-        }
-        
-        // لو كان Object مع products
-        if (oldData?.products) {
-          return {
-            ...oldData,
-            products: [newProduct, ...oldData.products],
-            pagination: {
-              ...oldData.pagination,
-              total: (oldData.pagination?.total || 0) + 1,
-            },
-          };
-        }
-        
-        return oldData;
-      });
-      
-      // ✅ invalidate لضمان التحديث
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      toast.success("✨ Product created successfully!");
-      
-      // ✅ التوجيه لصفحة المنتج الجديد
-      const productId = newProduct.id;
-      if (productId) {
-        router.push(`/shop/${productId}`);
-      } else {
-        router.push("/admin/products");
-      }
+      toast.success("Product created successfully!");
+      router.push("/admin/products");
       router.refresh();
     },
 

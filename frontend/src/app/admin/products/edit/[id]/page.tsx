@@ -32,8 +32,6 @@ export default function EditProductPage() {
         price: product.price,
         stock: product.stock,
         sale: product.sale,
-        category_id: product.product_category_id,
-        brand_id: product.brand_id,
       });
     }
   }, [product, reset]);
@@ -67,47 +65,68 @@ export default function EditProductPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white/40 backdrop-blur-sm rounded-2xl p-8 shadow-md space-y-6">
         <div>
           <label className="block text-[#5A3A2A] mb-2">Product Name</label>
-          <input {...register("name")} className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
+          <input
+            {...register("name")}
+            className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+          />
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
         </div>
 
         <div>
           <label className="block text-[#5A3A2A] mb-2">Description</label>
-          <textarea {...register("description")} rows={4} className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
+          <textarea
+            {...register("description")}
+            rows={4}
+            className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+          />
           {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-[#5A3A2A] mb-2">Price (EGP)</label>
-            <input {...register("price")} type="number" step="0.01" className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
+            <input
+              {...register("price")}
+              type="number"
+              step="0.01"
+              className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+            />
             {errors.price && <p className="text-red-500 text-sm">{errors.price.message}</p>}
           </div>
 
           <div>
             <label className="block text-[#5A3A2A] mb-2">Stock</label>
-            <input {...register("stock")} type="number" className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
+            <input
+              {...register("stock")}
+              type="number"
+              className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+            />
             {errors.stock && <p className="text-red-500 text-sm">{errors.stock.message}</p>}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-[#5A3A2A] mb-2">Sale (%)</label>
-            <input {...register("sale")} type="number" className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
-          </div>
-
-          <div>
-            <label className="block text-[#5A3A2A] mb-2">Category ID</label>
-            <input {...register("category_id")} type="number" className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg" />
-          </div>
+        <div>
+          <label className="block text-[#5A3A2A] mb-2">Sale (%)</label>
+          <input
+            {...register("sale")}
+            type="number"
+            className="w-full px-4 py-2 bg-white/50 border border-[#E6D5C3] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B5E3C]"
+          />
+          {errors.sale && <p className="text-red-500 text-sm">{errors.sale.message}</p>}
         </div>
 
         <div className="flex gap-4 pt-4">
-          <button type="submit" disabled={isPending} className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-6 py-2 rounded-lg transition">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-6 py-2 rounded-lg transition"
+          >
             {isPending ? "Saving..." : "Save Changes"}
           </button>
-          <Link href="/admin/products" className="border border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white px-6 py-2 rounded-lg transition">
+          <Link
+            href="/admin/products"
+            className="border border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white px-6 py-2 rounded-lg transition"
+          >
             Cancel
           </Link>
         </div>

@@ -47,7 +47,7 @@ export default function AdminLayout({
       <div className="flex">
         {/* Sidebar */}
         <aside
-          className={`bg-[#5A3A2A] text-black min-h-screen transition-all duration-300 ${
+          className={`bg-[#e8ddd3] text-black min-h-screen transition-all duration-300 ${
             isSidebarOpen ? "w-64" : "w-20"
           }`}
         >
