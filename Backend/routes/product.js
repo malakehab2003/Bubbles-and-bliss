@@ -8,6 +8,7 @@ const router = express.Router();
 
 // all routers used are here
 router.get('/list', ProductController.listProducts);
+router.get('/listAdmin', middleware.AuthRequest, middleware.roleAuth(["admin"]), ProductController.listAllProducts);
 router.get('/getProduct/:id', ProductController.getProudct);
 router.post('/create', upload.array("images", 10), middleware.AuthRequest, middleware.roleAuth(['admin']), ProductController.createProduct);
 router.put('/update/:id', middleware.AuthRequest, middleware.roleAuth(['admin']), ProductController.updateProduct);

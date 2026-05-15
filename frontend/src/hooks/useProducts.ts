@@ -35,14 +35,9 @@ export function useProducts(
       let products = [];
       let pagination = { page: 1, limit: 12, total: 0, totalPages: 1 };
 
-      if (data?.products?.rows) {
+      if (data?.pagination?.rows) {
         products = data.products.rows;
-        pagination = {
-          page: data.products.page || page,
-          limit: data.products.limit || limit,
-          total: data.products.count || 0,
-          totalPages: Math.ceil((data.products.count || 0) / (data.products.limit || limit)),
-        };
+        pagination = data.pagination || pagination;
       } else if (Array.isArray(data?.products)) {
         products = data.products;
         pagination = data.pagination || pagination;

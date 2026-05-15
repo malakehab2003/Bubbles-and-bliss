@@ -14,7 +14,7 @@ interface Product {
   sale: number;
   stock: number;
   status: string;
-  images?: { id: number; url: string }[];
+  image?: { id: number; url: string }[];
   colors?: string[];
   sizes?: string[];
 }
@@ -35,7 +35,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:5000/api/product/list?limit=100", {
+      const res = await fetch("http://localhost:5000/api/product/listAdmin", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -211,8 +211,8 @@ function ProductCard({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-beige-medium flex items-center justify-center overflow-hidden">
-              {product.images?.[0]?.url ? (
-                <Image src={product.images[0].url} alt={product.name} width={48} height={48} className="object-cover" />
+              {product?.image?.[0]?.url ? (
+                <Image src={product?.image?.[0].url} alt={product.name} width={48} height={48} className="object-cover" />
               ) : (
                 <Package className="w-6 h-6 text-brown-dark" />
               )}

@@ -33,7 +33,7 @@ export default function CreateProductPage() {
   
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    let files = Array.from(e.target.files || []);
     if (files.length > 0) {
       setValue("images", files);
       const previews = files.map((file) => URL.createObjectURL(file));

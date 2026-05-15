@@ -152,7 +152,7 @@ export default function ShopPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                      disabled={pagination ? currentPage <= pagination.totalPages : false}
+                      disabled={currentPage === 1}
 
                   >
                     ← Previous
@@ -167,25 +167,14 @@ export default function ShopPage() {
                     {currentPage}
                   </Button>
 
-                  {pagination && pagination.totalPages >= 2 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(2)}
-                      className="min-w-[40px]"
-                    >
-                      2
-                    </Button>
-                  )}
-
                   <Button
-  variant="outline"
-  size="sm"
-  onClick={() => handlePageChange(currentPage + 1)}
-  disabled={pagination ? currentPage != pagination.totalPages : false}
->
-  Next →
-</Button>
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === pagination.totalPages}
+                >
+                  Next →
+                </Button>
 
                 </div>
               </div>

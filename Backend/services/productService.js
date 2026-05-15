@@ -8,14 +8,15 @@ export const listItemsService = async (filters, page, limit) => {
     const where = utils.buildWhereFilters(filters);
     
     const products = await utils.getProducts(where, limit, offset);
+    const allProducts = await utils.getProducts(where, 100, 0);
 
     return {
         products,
         pagination: {
-            total: products.length,
+            total: allProducts.length,
             page,
             limit,
-            totalPages: Math.ceil(products.length / limit),
+            totalPages: Math.ceil(allProducts.length / limit),
         }
     }
 }
