@@ -26,7 +26,7 @@ export const getDashboard = async (req, res) => {
       ],
       group: ["product_id", "Product.id"],
       order: [[Sequelize.literal("salesCount"), "DESC"]],
-      limit: 5
+      limit: 3
     });
 
     // Least Selling Products

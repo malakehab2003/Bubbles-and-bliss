@@ -1,6 +1,7 @@
 import * as service from '../services/productService.js';
 import { Product } from '../models/db.js';
 import * as validate from '../utils/validateData.js';
+import { getProducts } from '../utils/product.js';
 
 
 const DEFAULT_LIMIT = 10;
@@ -21,6 +22,18 @@ export const listProducts = async (req, res) => {
         return res.status(200).send({
             products,
             pagination,
+        });
+    } catch (err) {
+        return res.status(400).send({ err: err.message, });
+    }
+}
+
+export const listAllProducts = async (req, res) => {
+    try {
+        const products = await getProducts({}, 100, 0);
+        console.log(products.length);
+        return res.status(200).send({
+            products,
         });
     } catch (err) {
         return res.status(400).send({ err: err.message, });
