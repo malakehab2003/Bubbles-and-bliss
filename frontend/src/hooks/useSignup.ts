@@ -17,40 +17,33 @@ export function useSignup() {
         dob: values.dob ? new Date(values.dob).toISOString().split('T')[0] : "",
       };
 
-      console.log("📤 Sending payload:", payload);
-
       const response = await fetch("http://localhost:5000/api/user/createUser", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await response.json();
-      console.log("📥 Response:", { status: response.status, data });
-
       if (!response.ok) {
         throw new Error(data.error || data.message || "Something went wrong");
       }
-      
       return data;
     },
     onSuccess: (data) => {
       if (data.token) {
         localStorage.setItem("token", data.token);
-        console.log("🔑 Token saved");
       }
-      
-      toast.success("Account created successfully!");
+      toast.success("Account created successfully! 🎉");
       router.push("/");
-      router.refresh();
+      // بعد ما الصفحة تتحول، ابعت الـ event عشان الـ Navbar يتحدث
+      setTimeout(() => {
+        window.dispatchEvent(new Event("userChanged"));
+      }, 300);
     },
     onError: (err: any) => {
-      console.error("❌ Error creating user:", err);
       toast.error(err.message || "Failed to create account. Please try again.");
     },
   });
-  
+
   return { signupUser, isPending };
 }

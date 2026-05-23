@@ -94,8 +94,22 @@ export const addProduct = async (req, res) => {
         service.checkQuantityService(product, data.quantity);
         data.user_id = user.id;
 
-        await service.checkUniqueProduct(data.product_id, user.id);
+        const existingCart = await service.checkUniqueProduct(data.product_id, user.id);
 
+        // لو المنتج موجود في العربة → زود الكمية
+        if (existingCart) {
+            const newQuantity = existingCart.quantity + data.quantity;
+            service.checkQuantityService(product, newQuantity);
+            existingCart.quantity = newQuantity;
+            await existingCart.save();
+
+            return res.status(200).send({
+                message: "Cart quantity updated successfully",
+                cart: existingCart,
+            });
+        }
+
+        // لو مش موجود → اضفه جديد
         const cart = await Cart.create(data);
 
         if (!cart) return res.status(400).send({ err: "Can't add products", });

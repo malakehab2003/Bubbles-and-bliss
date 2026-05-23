@@ -4,13 +4,16 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import logo from "../../../public/ChatGPT Image Apr 21, 2026, 08_28_17 PM.png";
 import { signInSchema, type SignInFormData } from "@/lib/validation/schemas";
 import { useLogin } from "@/hooks/useLogin";
+import toast from "react-hot-toast";
 
 export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const { loginUser, isPending } = useLogin();
+  const router = useRouter();
 
   const {
     register,
@@ -18,14 +21,20 @@ export default function SignInPage() {
     formState: { errors },
   } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
-  const onSubmit = (data: SignInFormData) => {
-    loginUser(data);
+  const onSubmit = async (data: SignInFormData) => {
+    try {
+      await loginUser(data);
+      toast.success("Welcome back! 🎉");
+      router.push("/");
+      setTimeout(() => {
+        window.dispatchEvent(new Event("userChanged"));
+      }, 300);
+    } catch (error) {
+      toast.error("Invalid email or password");
+    }
   };
 
   return (
@@ -41,48 +50,34 @@ export default function SignInPage() {
               className="object-cover w-full h-full"
             />
           </div>
-          <h1 className="text-3xl font-serif text-[#5A3A2A] tracking-wide">
-            Welcome Back
-          </h1>
-          <p className="text-[#8B5E3C] mt-2">
-            Sign in to continue your fragrance journey
-          </p>
+          <h1 className="text-3xl font-serif text-[#5A3A2A] tracking-wide">Welcome Back</h1>
+          <p className="text-[#8B5E3C] mt-2">Sign in to continue your fragrance journey</p>
         </div>
 
         <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-              <label className="block text-[#5A3A2A] mb-2 font-medium">
-                Email Address
-              </label>
+              <label className="block text-[#5A3A2A] mb-2 font-medium">Email Address</label>
               <input
                 type="email"
                 {...register("email")}
                 placeholder="your@email.com"
                 className={`w-full px-4 py-3 text-black bg-white/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition ${
-                  errors.email
-                    ? "border-red-500 focus:ring-red-500"
-                    : "border-[#E6D5C3] focus:border-[#8B5E3C]"
+                  errors.email ? "border-red-500 focus:ring-red-500" : "border-[#E6D5C3] focus:border-[#8B5E3C]"
                 }`}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label className="block text-[#5A3A2A] mb-2 font-medium">
-                Password
-              </label>
+              <label className="block text-[#5A3A2A] mb-2 font-medium">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="••••••••"
                   className={`w-full px-4 py-3 text-black bg-white/50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition ${
-                    errors.password
-                      ? "border-red-500 focus:ring-red-500"
-                      : "border-[#E6D5C3] focus:border-[#8B5E3C]"
+                    errors.password ? "border-red-500 focus:ring-red-500" : "border-[#E6D5C3] focus:border-[#8B5E3C]"
                   }`}
                 />
                 <button
@@ -93,16 +88,11 @@ export default function SignInPage() {
                   {showPassword ? "👁️" : "👁️‍🗨️"}
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
             </div>
 
             <div className="text-right">
-              <Link
-                href="/forgot-password"
-                className="text-sm text-[#8B5E3C] hover:text-[#5A3A2A] transition"
-              >
+              <Link href="/forgot-password" className="text-sm text-[#8B5E3C] hover:text-[#5A3A2A] transition">
                 Forgot password?
               </Link>
             </div>
@@ -134,9 +124,7 @@ export default function SignInPage() {
 
           <p className="text-center text-[#8B5E3C]">
             Don't have an account?{" "}
-            <Link href="/signup" className="text-[#5A3A2A] font-semibold hover:underline">
-              Sign Up
-            </Link>
+            <Link href="/signup" className="text-[#5A3A2A] font-semibold hover:underline">Sign Up</Link>
           </p>
         </div>
       </div>

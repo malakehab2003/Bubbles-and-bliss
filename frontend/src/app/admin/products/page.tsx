@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Search, Package, Plus, Edit, Trash2, Eye, ShoppingBag } from "lucide-react";
-import CreateProductModal from "@/components/admin/CreateProductModal";
 import EditProductModal from "@/components/admin/EditProductModal";
+import toast from "react-hot-toast";
 
 interface Product {
   id: number;
@@ -24,13 +24,12 @@ export default function AdminProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  useEffect(() => { fetchProducts(); }, []);
 
   const fetchProducts = async () => {
     const token = localStorage.getItem("token");
@@ -47,23 +46,25 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = async (productId: number, productName: string) => {
-    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
-      const token = localStorage.getItem("token");
-      try {
-        const res = await fetch(`http://localhost:5000/api/product/delete/${productId}`, {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (res.ok) {
-          setProducts(products.filter(p => p.id !== productId));
-          alert("Product deleted successfully");
-        } else {
-          alert("Failed to delete product");
-        }
-      } catch (error) {
-        console.error("Error deleting product:", error);
+  const handleDelete = async (product: Product) => {
+    const token = localStorage.getItem("token");
+    setDeletingId(product.id);
+    try {
+      const res = await fetch(`http://localhost:5000/api/product/delete/${product.id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        setProducts((prev) => prev.filter((p) => p.id !== product.id));
+        toast.success("Product deleted successfully");
+      } else {
+        toast.error("Failed to delete product");
       }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setDeletingId(null);
+      setConfirmDelete(null);
     }
   };
 
@@ -72,26 +73,22 @@ export default function AdminProductsPage() {
     setIsEditModalOpen(true);
   };
 
-  const handleRefresh = () => {
-    fetchProducts();
-  };
-
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     product.id.toString().includes(searchTerm)
   );
 
   const stats = {
     total: products.length,
-    active: products.filter(p => p.status !== "inactive").length,
-    lowStock: products.filter(p => p.stock < 10).length,
-    totalValue: products.reduce((sum, p) => sum + (p.price * p.stock), 0),
+    active: products.filter((p) => p.status !== "inactive").length,
+    lowStock: products.filter((p) => p.stock < 10).length,
+    totalValue: products.reduce((sum, p) => sum + p.price * p.stock, 0),
   };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="w-10 h-10 border-3 border-brown-warm border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -99,6 +96,7 @@ export default function AdminProductsPage() {
   return (
     <div className="min-h-screen bg-beige-light">
       <div className="max-w-7xl mx-auto p-6">
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brown-warm/20 mb-4">
@@ -108,7 +106,7 @@ export default function AdminProductsPage() {
           <p className="text-brown-dark/70 mt-2">Manage your product catalog</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl p-4 shadow-sm border-l-4 border-brown-warm">
             <p className="text-sm font-medium text-brown-warm">Total Products</p>
@@ -131,22 +129,19 @@ export default function AdminProductsPage() {
         {/* Search and Add */}
         <div className="bg-white rounded-xl shadow-sm border border-beige-medium p-4 mb-6">
           <div className="flex flex-wrap gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-brown-warm" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search by product name or ID..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-beige-light/50 border border-beige-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-brown-warm focus:border-transparent text-brown-dark font-medium placeholder:text-brown-warm/50"
-                />
-              </div>
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brown-warm" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by product name or ID..."
+                className="w-full pl-10 pr-4 py-2.5 bg-beige-light/50 border border-beige-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-brown-warm text-brown-dark font-medium placeholder:text-brown-warm/50"
+              />
             </div>
             <Link href="/admin/products/create">
               <button className="px-4 py-2.5 bg-brown-warm hover:bg-brown-dark text-white font-semibold rounded-lg transition flex items-center gap-2">
-                <Plus className="w-4 h-4" />
-                Add Product
+                <Plus className="w-4 h-4" /> Add Product
               </button>
             </Link>
           </div>
@@ -166,8 +161,9 @@ export default function AdminProductsPage() {
                 product={product}
                 isSelected={selectedProduct?.id === product.id}
                 onSelect={() => setSelectedProduct(selectedProduct?.id === product.id ? null : product)}
-                onDelete={handleDelete}
+                onDelete={() => setConfirmDelete(product)}
                 onEdit={() => handleEdit(product)}
+                isDeleting={deletingId === product.id}
               />
             ))
           )}
@@ -178,41 +174,74 @@ export default function AdminProductsPage() {
       <EditProductModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onSuccess={handleRefresh}
+        onSuccess={fetchProducts}
         product={productToEdit}
       />
+
+      {/* ── Confirm Delete Modal ── */}
+      {confirmDelete && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={() => setConfirmDelete(null)}
+        >
+          <div
+            className="bg-[#F3E8DE] rounded-2xl shadow-2xl w-full max-w-sm p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-red-100 mx-auto mb-4">
+              <Trash2 className="w-6 h-6 text-red-500" />
+            </div>
+            <h2 className="text-xl font-serif text-[#5A3A2A] text-center mb-2">Delete Product?</h2>
+            <p className="text-sm text-[#8B5E3C] text-center mb-6">
+              هتمسح <span className="font-bold text-[#5A3A2A]">"{confirmDelete.name}"</span> نهائياً ومش هترجع.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setConfirmDelete(null)}
+                className="flex-1 py-3 border-2 border-[#E6D5C3] text-[#8B5E3C] rounded-full hover:bg-[#E6D5C3] transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(confirmDelete)}
+                disabled={deletingId === confirmDelete.id}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full transition disabled:opacity-50"
+              >
+                {deletingId === confirmDelete.id
+                  ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  : <><Trash2 className="w-4 h-4" /> Delete</>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-// Product Card Component
-function ProductCard({ 
-  product, 
-  isSelected, 
-  onSelect,
-  onDelete,
-  onEdit
-}: { 
-  product: Product; 
+function ProductCard({
+  product, isSelected, onSelect, onDelete, onEdit, isDeleting,
+}: {
+  product: Product;
   isSelected: boolean;
   onSelect: () => void;
-  onDelete: (id: number, name: string) => void;
+  onDelete: () => void;
   onEdit: () => void;
+  isDeleting: boolean;
 }) {
-  const finalPrice = product.sale > 0 
-    ? product.price * (1 - product.sale / 100) 
-    : product.price;
+  const finalPrice = product.sale > 0 ? product.price * (1 - product.sale / 100) : product.price;
 
   return (
     <div className={`bg-white rounded-xl shadow-sm border transition-all duration-200 ${
-      isSelected ? 'border-brown-warm shadow-md' : 'border-beige-medium hover:shadow-md'
+      isSelected ? "border-brown-warm shadow-md" : "border-beige-medium hover:shadow-md"
     }`}>
       <div className="p-4 cursor-pointer" onClick={onSelect}>
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-beige-medium flex items-center justify-center overflow-hidden">
               {product?.image?.[0]?.url ? (
-                <Image src={product?.image?.[0].url} alt={product.name} width={48} height={48} className="object-cover" />
+                <Image src={product.image[0].url} alt={product.name} width={48} height={48} className="object-cover" />
               ) : (
                 <Package className="w-6 h-6 text-brown-dark" />
               )}
@@ -232,27 +261,24 @@ function ProductCard({
               ) : (
                 <p className="text-lg font-bold text-brown-dark">${product.price}</p>
               )}
-              <p className={`text-xs font-medium ${product.stock < 10 ? 'text-red-500' : 'text-green-600'}`}>
+              <p className={`text-xs font-medium ${product.stock < 10 ? "text-red-500" : "text-green-600"}`}>
                 Stock: {product.stock}
               </p>
             </div>
             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
               <Link href={`/shop/${product.id}`} target="_blank">
-                <button className="p-2 text-brown-warm hover:text-brown-dark transition" title="View">
+                <button className="p-2 text-brown-warm hover:text-brown-dark transition">
                   <Eye className="w-4 h-4" />
                 </button>
               </Link>
-              <button 
-                onClick={onEdit}
-                className="p-2 text-blue-500 hover:text-blue-700 transition" title="Edit"
-              >
+              <button onClick={onEdit} className="p-2 text-blue-500 hover:text-blue-700 transition">
                 <Edit className="w-4 h-4" />
               </button>
-              <button 
-                onClick={() => onDelete(product.id, product.name)}
-                className="p-2 text-red-500 hover:text-red-700 transition" title="Delete"
-              >
-                <Trash2 className="w-4 h-4" />
+              <button onClick={onDelete} disabled={isDeleting} className="p-2 text-red-500 hover:text-red-700 transition disabled:opacity-50">
+                {isDeleting
+                  ? <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                  : <Trash2 className="w-4 h-4" />
+                }
               </button>
             </div>
           </div>
@@ -277,7 +303,6 @@ function ProductCard({
                 )}
               </div>
             </div>
-
             <div className="space-y-2">
               <h4 className="text-sm font-bold text-brown-dark flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4" /> Quick Actions
@@ -285,16 +310,11 @@ function ProductCard({
               <div className="bg-white rounded-lg p-3 space-y-2 border border-beige-medium">
                 <Link href={`/shop/${product.id}`} target="_blank">
                   <button className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-beige-medium hover:bg-beige-light text-brown-dark font-semibold rounded-lg text-sm transition">
-                    <Eye className="w-4 h-4" />
-                    View on Store
+                    <Eye className="w-4 h-4" /> View on Store
                   </button>
                 </Link>
-                <button
-                  onClick={onEdit}
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-brown-warm hover:bg-brown-dark text-white font-semibold rounded-lg text-sm transition"
-                >
-                  <Edit className="w-4 h-4" />
-                  Edit Product
+                <button onClick={onEdit} className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-brown-warm hover:bg-brown-dark text-white font-semibold rounded-lg text-sm transition">
+                  <Edit className="w-4 h-4" /> Edit Product
                 </button>
               </div>
             </div>

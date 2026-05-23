@@ -1,311 +1,374 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import Link from "next/link";
+import { CheckCircle, MapPin, Phone, Tag, ShoppingBag, Truck, Gift } from "lucide-react";
+import toast from "react-hot-toast";
 
-// API Functions
-async function getCart() {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:5000/api/cart/list", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const data = await res.json();
-  return data.cart || [];
-}
-
-async function getAddresses() {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:5000/api/address/list", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const data = await res.json();
-  return data.addresses || [];
-}
-
-async function createOrder(orderData: {
-  total_price: number;
-  receive_type: string;
-  payment_type: string;
-  address_id: number | null;
-  promo_code_id: number;
-}) {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:5000/api/order/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(orderData),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || data.message || "Failed to create order");
-  return data;
-}
-
-async function createOrderItems(orderId: number) {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:5000/api/order/createItems", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ order_id: orderId }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || data.message || "Failed to create order items");
-  return data;
-}
+const FREE_SHIPPING_THRESHOLD = 500;
+const SHIPPING_COST = 50;
 
 interface CartItem {
   id: number;
   quantity: number;
-  product_id: number;
-  product: {
-    id: number;
-    name: string;
-    price: number;
-  };
+  product: { name: string; price: number; sale: number };
 }
+interface Government { id: number; name: string; }
+interface City { id: number; name: string; government_id: number; }
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const [receiveType, setReceiveType] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-  const [addressId, setAddressId] = useState("");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [governments, setGovernments] = useState<Government[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
+  const [filteredCities, setFilteredCities] = useState<City[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
-  // Get cart data
-  const { data: cart, isLoading: cartLoading } = useQuery({
-    queryKey: ["cart"],
-    queryFn: getCart,
-  });
+  const [address, setAddress] = useState("");
+  const [landmark, setLandmark] = useState("");
+  const [phone, setPhone] = useState("");
+  const [governmentId, setGovernmentId] = useState("");
+  const [cityId, setCityId] = useState("");
+  const [promoCode, setPromoCode] = useState("");
+  const [promoResult, setPromoResult] = useState<{ id: number; code: string; discount: number } | null>(null);
+  const [promoError, setPromoError] = useState("");
+  const [applyingPromo, setApplyingPromo] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Get addresses
-  const { data: addresses, isLoading: addressLoading } = useQuery({
-    queryKey: ["addresses"],
-    queryFn: getAddresses,
-  });
-
-  // Calculate total
   useEffect(() => {
-    if (cart && cart.length > 0) {
-      setCartItems(cart);
-      const total = cart.reduce((sum: number, item: CartItem) => {
-        return sum + (item.product?.price || 0) * item.quantity;
-      }, 0);
-      setTotalPrice(total);
-    }
-  }, [cart]);
+    const token = localStorage.getItem("token");
+    if (!token) { router.push("/signin"); return; }
 
-  // Order mutation
-  const { mutateAsync: createOrderMutation } = useMutation({
-    mutationFn: createOrder,
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to create order");
-    },
-  });
+    const load = async () => {
+      try {
+        const [cartRes, govRes, cityRes] = await Promise.all([
+          fetch("http://localhost:5000/api/cart/list", { headers: { Authorization: `Bearer ${token}` } }),
+          fetch("http://localhost:5000/api/government/list"),
+          fetch("http://localhost:5000/api/city/list"),
+        ]);
+        const cartData = await cartRes.json();
+        const govData = await govRes.json();
+        const cityData = await cityRes.json();
+        setCartItems(cartData.cart || []);
+        setGovernments(govData.governments || []);
+        setCities(cityData.citys || cityData.cities || []);
+      } catch (err) { console.error(err); }
+      finally { setIsLoading(false); }
+    };
+    load();
+  }, [router]);
 
-  const { mutateAsync: createOrderItemsMutation } = useMutation({
-    mutationFn: createOrderItems,
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to create order items");
-    },
-  });
+  useEffect(() => {
+    if (!governmentId) { setFilteredCities([]); setCityId(""); return; }
+    setFilteredCities(cities.filter((c) => String(c.government_id) === String(governmentId)));
+    setCityId("");
+  }, [governmentId, cities]);
 
-  const handleSubmit = async () => {
-    // Validation
-    if (!receiveType) {
-      toast.error("Please select delivery type");
-      return;
-    }
-    if (!paymentType) {
-      toast.error("Please select payment method");
-      return;
-    }
-    if (totalPrice <= 0) {
-      toast.error("Your cart is empty");
-      return;
-    }
-    if (!addressId && receiveType === "delivery") {
-      toast.error("Please select an address for delivery");
-      return;
-    }
-
-    setIsProcessing(true);
-    const loadingToast = toast.loading("Processing your order...");
-
-    try {
-      // Step 1: Create order
-      const orderResponse = await createOrderMutation({
-        total_price: totalPrice,
-        receive_type: receiveType,
-        payment_type: paymentType,
-        address_id: receiveType === "delivery" ? Number(addressId) : null,
-        promo_code_id: 0,
-      });
-
-      if (!orderResponse?.order?.id) {
-        throw new Error("Failed to create order");
-      }
-
-      const newOrderId = orderResponse.order.id;
-
-      // Step 2: Create order items
-      await createOrderItemsMutation(newOrderId);
-
-      // Step 3: Clear cart and redirect
-      queryClient.invalidateQueries({ queryKey: ["cart"] });
-      toast.success("Order created successfully! ✅", { id: loadingToast });
-      
-      setTimeout(() => {
-        router.push("/profile/orders");
-      }, 1500);
-    } catch (error: any) {
-      console.error("Checkout error:", error);
-      toast.error(error.message || "Something went wrong", { id: loadingToast });
-    } finally {
-      setIsProcessing(false);
-    }
+  const getItemPrice = (item: CartItem) => {
+    const p = item.product.price;
+    const s = item.product.sale;
+    return s > 0 ? p * (1 - s / 100) : p;
   };
 
-  if (cartLoading || addressLoading) {
-    return (
-      <div className="bg-[#F3E8DE] min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const subtotal = cartItems.reduce((sum, item) => sum + getItemPrice(item) * item.quantity, 0);
+  const isFreeShipping = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const shipping = isFreeShipping ? 0 : SHIPPING_COST;
+  const discount = promoResult ? Math.round((subtotal * promoResult.discount) / 100) : 0;
+  const total = subtotal + shipping - discount;
 
-  if (cartItems.length === 0) {
-    return (
-      <div className="bg-[#F3E8DE] min-h-screen flex items-center justify-center py-12 px-4">
-        <div className="max-w-md w-full text-center">
-          <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-12 shadow-md">
-            <div className="text-7xl mb-4">🛒</div>
-            <h1 className="text-2xl font-serif text-[#5A3A2A] mb-4">Your Cart is Empty</h1>
-            <p className="text-[#8B5E3C] mb-8">Add some items before checking out</p>
+  const applyPromo = async () => {
+    if (!promoCode.trim()) return;
+    const token = localStorage.getItem("token");
+    setApplyingPromo(true);
+    setPromoError("");
+    setPromoResult(null);
+    try {
+      const res = await fetch("http://localhost:5000/api/promocode/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ code: promoCode }),
+      });
+      const data = await res.json();
+      if (res.ok) { setPromoResult(data.promocode || data); toast.success("Promo code applied!"); }
+      else { setPromoError(data.error || data.err || "Invalid promo code"); }
+    } catch { setPromoError("Failed to apply promo code"); }
+    finally { setApplyingPromo(false); }
+  };
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!address.trim()) e.address = "Address is required";
+    if (!phone.trim()) e.phone = "Phone is required";
+    else if (!/^(\+2)?01[0125][0-9]{8}$/.test(phone)) e.phone = "Enter a valid Egyptian phone";
+    if (!governmentId) e.government = "Please select a governorate";
+    if (!cityId) e.city = "Please select a city";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+    const token = localStorage.getItem("token");
+    setIsSubmitting(true);
+    try {
+      const orderBody: Record<string, any> = {
+        total_price: total,
+        address,
+        phone,
+        government_id: parseInt(governmentId),
+        city_id: parseInt(cityId),
+      };
+      if (landmark.trim()) orderBody.landmark = landmark;
+      if (promoResult) orderBody.promocode_id = promoResult.id;
+
+      const orderRes = await fetch("http://localhost:5000/api/order/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(orderBody),
+      });
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) { toast.error(orderData.err || "Failed to create order"); return; }
+
+      await fetch("http://localhost:5000/api/order/item/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ order_id: orderData.order?.id }),
+      });
+
+      setOrderId(orderData.order?.id);
+      setOrderSuccess(true);
+    } catch { toast.error("Something went wrong, please try again"); }
+    finally { setIsSubmitting(false); }
+  };
+
+  const inputClass = (err?: string) =>
+    `w-full px-4 py-3 bg-white/60 border rounded-xl text-[#3a2010] placeholder-[#b09070] focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition text-sm ${err ? "border-red-400" : "border-[#E6D5C3]"}`;
+
+  if (isLoading) return (
+    <div className="bg-[#F3E8DE] min-h-screen flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-[#8B5E3C] border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  // Success screen
+  if (orderSuccess) return (
+    <div className="bg-[#F3E8DE] min-h-screen flex items-center justify-center px-4">
+      <div className="max-w-md w-full text-center">
+        <div className="bg-white/50 backdrop-blur-sm rounded-3xl p-10 shadow-lg border border-[#E6D5C3]">
+          <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+            <CheckCircle className="w-10 h-10 text-green-500" />
+          </div>
+          <h1 className="text-3xl font-serif text-[#5A3A2A] mb-2">Order Placed! 🎉</h1>
+          <p className="text-[#8B5E3C] mb-1 text-sm">Thank you for your purchase</p>
+          {orderId && <p className="text-xs text-[#8B5E3C] mb-6 font-mono bg-[#E6D5C3] inline-block px-3 py-1 rounded-full">Order #{orderId}</p>}
+          <div className="flex flex-col gap-3 mt-4">
+            <Link href="/profile/orders">
+              <button className="w-full bg-[#5A3A2A] hover:bg-[#3D2310] text-[#F3E8DE] py-3 rounded-full transition text-sm font-medium">
+                View My Orders
+              </button>
+            </Link>
             <Link href="/shop">
-              <button className="bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white px-8 py-3 rounded-full transition">
+              <button className="w-full border-2 border-[#E6D5C3] text-[#8B5E3C] hover:bg-[#E6D5C3] py-3 rounded-full transition text-sm">
                 Continue Shopping
               </button>
             </Link>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+
+  if (cartItems.length === 0) return (
+    <div className="bg-[#F3E8DE] min-h-screen flex items-center justify-center px-4">
+      <div className="text-center">
+        <p className="text-[#8B5E3C] mb-4">Your cart is empty</p>
+        <Link href="/shop"><button className="bg-[#8B5E3C] text-white px-6 py-2 rounded-full hover:bg-[#5A3A2A] transition text-sm">Go Shopping</button></Link>
+      </div>
+    </div>
+  );
 
   return (
     <div className="bg-[#F3E8DE] min-h-screen py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-serif text-[#5A3A2A]">Checkout</h1>
-          <p className="text-[#8B5E3C] mt-2">Complete your order</p>
-        </div>
+      <div className="max-w-5xl mx-auto px-4">
+        <h1 className="text-3xl font-serif text-[#5A3A2A] text-center mb-1">Checkout</h1>
+        <p className="text-center text-[#8B5E3C] text-sm mb-8">Complete your order</p>
 
-        <div className="bg-white/40 backdrop-blur-sm rounded-2xl p-8 shadow-md space-y-6">
-          {/* Order Summary */}
-          <div className="bg-[#E6D5C3]/30 rounded-xl p-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-[#8B5E3C]">Total Items:</span>
-              <span className="font-bold text-[#5A3A2A]">{cartItems.length}</span>
-            </div>
-            <div className="flex justify-between items-center pt-2 border-t border-[#E6D5C3]">
-              <span className="text-[#8B5E3C]">Total Price:</span>
-              <span className="font-bold text-2xl text-[#5A3A2A]">{totalPrice} EGP</span>
-            </div>
-          </div>
+        <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* Delivery Type */}
-          <div>
-            <label className="block text-sm font-semibold text-[#5A3A2A] mb-2">
-              Delivery Type <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={receiveType}
-              onChange={(e) => setReceiveType(e.target.value)}
-              className="w-full px-4 py-3 bg-white/50 border border-[#E6D5C3] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] text-[#5A3A2A]"
-            >
-              <option value="">Select delivery type</option>
-              <option value="delivery">🚚 Home Delivery</option>
-              <option value="pickup">🏬 Store Pickup</option>
-            </select>
-          </div>
+          {/* ── Left: Form ── */}
+          <div className="flex-1 space-y-5">
 
-          {/* Address - Show only for delivery */}
-          {receiveType === "delivery" && (
-            <div>
-              <label className="block text-sm font-semibold text-[#5A3A2A] mb-2">
-                Delivery Address <span className="text-red-500">*</span>
-              </label>
-              <select
-                value={addressId}
-                onChange={(e) => setAddressId(e.target.value)}
-                className="w-full px-4 py-3 bg-white/50 border border-[#E6D5C3] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] text-[#5A3A2A]"
-              >
-                <option value="">Select an address</option>
-                {addresses?.map((addr: any) => (
-                  <option key={addr.id} value={addr.id}>
-                    📍 {addr.address}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          {/* Payment Method */}
-          <div>
-            <label className="block text-sm font-semibold text-[#5A3A2A] mb-2">
-              Payment Method <span className="text-red-500">*</span>
-            </label>
-            <select
-              value={paymentType}
-              onChange={(e) => setPaymentType(e.target.value)}
-              className="w-full px-4 py-3 bg-white/50 border border-[#E6D5C3] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] text-[#5A3A2A]"
-            >
-              <option value="">Select payment method</option>
-              <option value="cash">💵 Cash on Delivery</option>
-            </select>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            onClick={handleSubmit}
-            disabled={isProcessing}
-            className="w-full bg-[#8B5E3C] hover:bg-[#5A3A2A] text-white py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-105 disabled:opacity-50"
-          >
-            {isProcessing ? (
-              <span className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Processing...
-              </span>
+            {/* Free Shipping Banner */}
+            {isFreeShipping ? (
+              <div className="bg-green-50 border border-green-200 rounded-2xl px-5 py-4 flex items-center gap-3">
+                <Gift className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <div>
+                  <p className="text-green-700 font-semibold text-sm">Free Shipping Unlocked! 🎉</p>
+                  <p className="text-green-600 text-xs mt-0.5">Your order qualifies for free delivery — you saved {SHIPPING_COST} EGP!</p>
+                </div>
+              </div>
             ) : (
-              `Confirm Order • ${totalPrice} EGP`
+              <div className="bg-white/50 border border-[#E6D5C3] rounded-2xl px-5 py-4 flex items-center gap-3">
+                <Truck className="w-5 h-5 text-[#8B5E3C] flex-shrink-0" />
+                <p className="text-[#5A3A2A] text-sm">
+                  Add <strong className="text-[#8B5E3C]">{(FREE_SHIPPING_THRESHOLD - subtotal).toFixed(0)} EGP</strong> more to your order for <strong>free shipping</strong>
+                </p>
+              </div>
             )}
-          </button>
 
-          {/* Back to Cart */}
-          <Link href="/cart">
-            <button className="w-full border border-[#8B5E3C] text-[#8B5E3C] hover:bg-[#8B5E3C] hover:text-white py-3 rounded-xl transition duration-300">
-              ← Back to Cart
-            </button>
-          </Link>
+            {/* Shipping Details */}
+            <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-[#E6D5C3]/50">
+              <h2 className="text-lg font-serif text-[#5A3A2A] mb-5 flex items-center gap-2">
+                <MapPin className="w-5 h-5 text-[#8B5E3C]" /> Shipping Details
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#5A3A2A] mb-1.5 uppercase tracking-wide">Address *</label>
+                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Street name, building number..." className={inputClass(errors.address)} />
+                  {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#5A3A2A] mb-1.5 uppercase tracking-wide">
+                    Landmark <span className="text-[#8B5E3C] normal-case font-normal">(optional)</span>
+                  </label>
+                  <input type="text" value={landmark} onChange={(e) => setLandmark(e.target.value)} placeholder="Near a mosque, school..." className={inputClass()} />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#5A3A2A] mb-1.5 uppercase tracking-wide flex items-center gap-1">
+                    <Phone className="w-3.5 h-3.5" /> Phone Number *
+                  </label>
+                  <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="01xxxxxxxxx" className={inputClass(errors.phone)} />
+                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#5A3A2A] mb-1.5 uppercase tracking-wide">Governorate *</label>
+                    <select value={governmentId} onChange={(e) => setGovernmentId(e.target.value)} className={inputClass(errors.government)}>
+                      <option value="">Select Governorate</option>
+                      {governments.map((gov) => <option key={gov.id} value={gov.id}>{gov.name}</option>)}
+                    </select>
+                    {errors.government && <p className="text-red-500 text-xs mt-1">{errors.government}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#5A3A2A] mb-1.5 uppercase tracking-wide">City *</label>
+                    <select value={cityId} onChange={(e) => setCityId(e.target.value)} disabled={!governmentId} className={`${inputClass(errors.city)} disabled:opacity-50 disabled:cursor-not-allowed`}>
+                      <option value="">{governmentId ? "Select City" : "Select governorate first"}</option>
+                      {filteredCities.map((city) => <option key={city.id} value={city.id}>{city.name}</option>)}
+                    </select>
+                    {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Promo Code */}
+            <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-[#E6D5C3]/50">
+              <h2 className="text-lg font-serif text-[#5A3A2A] mb-4 flex items-center gap-2">
+                <Tag className="w-5 h-5 text-[#8B5E3C]" /> Promo Code
+              </h2>
+              <div className="flex gap-3">
+                <input
+                  type="text"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                  placeholder="Enter promo code"
+                  disabled={!!promoResult}
+                  className={`flex-1 px-4 py-3 bg-white/60 border border-[#E6D5C3] rounded-xl text-[#3a2010] placeholder-[#b09070] focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition text-sm disabled:opacity-50 font-mono tracking-widest`}
+                />
+                {promoResult ? (
+                  <button onClick={() => { setPromoResult(null); setPromoCode(""); }} className="px-5 py-3 bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition text-sm border border-red-200">
+                    Remove
+                  </button>
+                ) : (
+                  <button onClick={applyPromo} disabled={applyingPromo || !promoCode.trim()} className="px-5 py-3 bg-[#5A3A2A] hover:bg-[#3D2310] text-[#F3E8DE] rounded-xl transition text-sm disabled:opacity-50">
+                    {applyingPromo ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : "Apply"}
+                  </button>
+                )}
+              </div>
+              {promoError && <p className="text-red-500 text-xs mt-2">{promoError}</p>}
+              {promoResult && (
+                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700 flex items-center gap-2">
+                  ✅ <strong>{promoResult.code}</strong> applied — {promoResult.discount}% off
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ── Right: Summary ── */}
+          <div className="lg:w-96">
+            <div className="bg-white/50 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-[#E6D5C3]/50 sticky top-24">
+              <h2 className="text-lg font-serif text-[#5A3A2A] mb-4 pb-3 border-b border-[#E6D5C3] flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-[#8B5E3C]" /> Order Summary
+              </h2>
+
+              <div className="space-y-2 mb-4 max-h-48 overflow-y-auto pr-1">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center text-sm">
+                    <span className="text-[#5A3A2A] flex-1 truncate mr-2">
+                      {item.product.name}
+                      <span className="text-[#8B5E3C] ml-1 text-xs">×{item.quantity}</span>
+                    </span>
+                    <span className="text-[#8B5E3C] flex-shrink-0 text-xs">
+                      {(getItemPrice(item) * item.quantity).toFixed(0)} EGP
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-[#E6D5C3] pt-4 space-y-2.5 text-sm">
+                <div className="flex justify-between text-[#8B5E3C]">
+                  <span>Subtotal</span>
+                  <span>{subtotal.toFixed(0)} EGP</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#8B5E3C]">Shipping</span>
+                  {isFreeShipping ? (
+                    <span className="text-green-600 font-semibold text-xs">FREE 🎉</span>
+                  ) : (
+                    <span className="text-[#8B5E3C]">{SHIPPING_COST} EGP</span>
+                  )}
+                </div>
+                {promoResult && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount ({promoResult.discount}%)</span>
+                    <span>-{discount} EGP</span>
+                  </div>
+                )}
+                <div className="border-t border-[#E6D5C3] pt-3 flex justify-between text-[#5A3A2A] font-bold text-base">
+                  <span>Total</span>
+                  <span>{total.toFixed(0)} EGP</span>
+                </div>
+              </div>
+
+              {isFreeShipping && (
+                <div className="mt-3 bg-green-50 border border-green-200 rounded-xl px-3 py-2 text-xs text-green-700 text-center">
+                  ✦ Free shipping applied — saved {SHIPPING_COST} EGP!
+                </div>
+              )}
+
+              <button
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                className="w-full mt-5 flex items-center justify-center gap-2 bg-[#5A3A2A] hover:bg-[#3D2310] text-[#F3E8DE] py-4 rounded-full transition disabled:opacity-50 disabled:cursor-not-allowed font-medium text-sm tracking-wide"
+              >
+                {isSubmitting ? (
+                  <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Placing Order...</>
+                ) : (
+                  `Confirm Order • ${total.toFixed(0)} EGP`
+                )}
+              </button>
+
+              <Link href="/cart">
+                <button className="w-full mt-3 border border-[#E6D5C3] text-[#8B5E3C] hover:bg-[#E6D5C3] py-3 rounded-full transition text-sm">
+                  ← Back to Cart
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </div>

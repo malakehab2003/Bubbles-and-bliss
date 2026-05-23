@@ -23,9 +23,9 @@ export const signUpSchema = z.object({
         .min(6, "Password must be at least 6 characters"),
     
     phone: z.string()
-        .optional()
+        .min(1, "Phone number is required")
         .refine(
-            (val) => !val || /^(\+20|0)?1[0-9]{9}$/.test(val),
+            (val) => /^(\+20|0)?1[0-9]{9}$/.test(val),
             "Please enter a valid Egyptian phone number"
         ),
     
@@ -36,7 +36,6 @@ export const signUpSchema = z.object({
                 const birthDate = new Date(value);
                 let age = today.getFullYear() - birthDate.getFullYear();
                 const monthDiff = today.getMonth() - birthDate.getMonth();
-                
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }

@@ -3,6 +3,7 @@ import { getOrders } from "../services/orderService.js";
 import * as service from '../services/orderItemService.js';
 
 
+// للـ user العادي — بيتحقق إن الأوردر بتاعه هو
 export const listItems = async (req, res) => {
     try {
         const { order_id } = req.params;
@@ -18,6 +19,24 @@ export const listItems = async (req, res) => {
         if (!items) return res.status(400).send({ err: "Can't get items" });
 
         return res.status(200).send({ items, });
+    } catch (err) {
+        return res.status(400).send({ err: err.message });
+    }
+}
+
+
+// للأدمن — بيجيب items أي أوردر بدون تقييد
+export const adminListItems = async (req, res) => {
+    try {
+        const { order_id } = req.params;
+        if (!order_id) return res.status(400).send({ err: "Missing order_id" });
+
+        const where = { order_id };
+        const items = await service.getOrderItems(where);
+
+        if (!items) return res.status(400).send({ err: "Can't get items" });
+
+        return res.status(200).send({ items });
     } catch (err) {
         return res.status(400).send({ err: err.message });
     }

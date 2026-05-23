@@ -31,5 +31,5 @@ export const checkUniqueProduct = async (product_id, user_id) => {
         }
     });
 
-    if (cart) throw new Error ("Product already exists");
+    return cart; // بيرجع null لو مش موجود، أو الـ cart object لو موجود
 }

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { User, Mail, Phone, Calendar, Edit, ShoppingBag, LogOut, LayoutDashboard } from "lucide-react";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogoutUser } from '@/hooks/useLogoutUser';
 
 interface UserData {
   id: number;
@@ -23,7 +23,7 @@ export default function ProfilePage() {
     name: "",
     phone: "",
   });
-  const { logout } = useLogout();
+  const { logoutUser } = useLogoutUser();
 
   useEffect(() => {
     fetchUser();
@@ -135,7 +135,7 @@ export default function ProfilePage() {
                   <span>My Orders</span>
                 </Link>
                 <button
-                  onClick={() => logout()}
+                  onClick={() => logoutUser()}
                   className="flex items-center gap-3 w-full px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition text-left"
                 >
                   <LogOut className="w-4 h-4" />
